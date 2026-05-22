@@ -224,6 +224,79 @@
   .tg{background:rgba(255,214,10,.12);border-color:rgba(255,214,10,.28);color:var(--gold)}
   .to2{background:rgba(255,109,0,.12);border-color:rgba(255,109,0,.28);color:var(--orange)}
 
+  /* ── CARD LIVE DEMOS ─────────────────────────────────── */
+  .c-demo{height:86px;margin-bottom:1rem;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;border-radius:10px;background:rgba(255,255,255,.025)}
+
+  /* 1 Three.js — CSS 3D rotating cube */
+  .cd-cube-scene{width:56px;height:56px;perspective:160px}
+  .cd-cube{width:100%;height:100%;position:relative;transform-style:preserve-3d;animation:cdCubeSpin 5s linear infinite}
+  @keyframes cdCubeSpin{to{transform:rotateX(360deg) rotateY(310deg)}}
+  .cd-face{position:absolute;width:56px;height:56px;border:1px solid rgba(247,37,133,.65);background:rgba(247,37,133,.06);box-shadow:inset 0 0 10px rgba(247,37,133,.12)}
+  .cd-face.cf{transform:translateZ(28px)}.cd-face.cb{transform:rotateY(180deg) translateZ(28px)}
+  .cd-face.cr{transform:rotateY(90deg) translateZ(28px)}.cd-face.cl{transform:rotateY(-90deg) translateZ(28px)}
+  .cd-face.ct{transform:rotateX(90deg) translateZ(28px)}.cd-face.cbo{transform:rotateX(-90deg) translateZ(28px)}
+
+  /* 2 GSAP — staggered timeline bars */
+  .cd-gsap{display:flex;flex-direction:column;gap:7px;width:130px}
+  .cd-gbar{height:5px;border-radius:4px;width:0%;animation:cdGBar 2.6s ease-in-out infinite}
+  .cd-gbar:nth-child(1){background:var(--pink);box-shadow:0 0 6px var(--pink);animation-delay:0s}
+  .cd-gbar:nth-child(2){background:var(--neon);box-shadow:0 0 6px var(--neon);animation-delay:.22s}
+  .cd-gbar:nth-child(3){background:var(--gold);box-shadow:0 0 6px var(--gold);animation-delay:.44s}
+  .cd-gbar:nth-child(4){background:var(--orange);box-shadow:0 0 6px var(--orange);animation-delay:.66s}
+  @keyframes cdGBar{0%,4%{width:0%}55%{width:100%}85%,100%{width:0%}}
+
+  /* 3 Particles.js — JS-generated floating dots */
+  .cd-pts{position:relative;width:130px;height:80px}
+  .cd-pt{position:absolute;border-radius:50%;animation:cdDotFloat ease-in-out infinite alternate}
+  @keyframes cdDotFloat{0%{transform:translate(0,0)}100%{transform:translate(var(--tx),var(--ty))}}
+
+  /* 4 Chart.js — mini animated bars */
+  .cd-chart-mini{display:flex;align-items:flex-end;gap:6px;height:58px}
+  .cd-cbar{width:15px;border-radius:2px 2px 0 0;transform-origin:bottom;animation:cdCBar 2.1s ease-in-out infinite}
+  .cd-cbar:nth-child(1){background:var(--gold);box-shadow:0 -3px 8px rgba(255,214,10,.45);animation-delay:0s}
+  .cd-cbar:nth-child(2){background:var(--orange);box-shadow:0 -3px 8px rgba(255,109,0,.4);animation-delay:.18s}
+  .cd-cbar:nth-child(3){background:var(--pink);box-shadow:0 -3px 8px rgba(247,37,133,.45);animation-delay:.36s}
+  .cd-cbar:nth-child(4){background:var(--neon);box-shadow:0 -3px 8px rgba(6,255,165,.4);animation-delay:.54s}
+  .cd-cbar:nth-child(5){background:var(--gold);box-shadow:0 -3px 8px rgba(255,214,10,.38);animation-delay:.72s}
+  @keyframes cdCBar{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.38)}}
+
+  /* 5 Typed.js — live typing text */
+  .cd-typed-demo{font-family:'Space Grotesk',sans-serif;font-size:.88rem;font-weight:700;color:var(--neon);text-align:center}
+  .cd-cursor-blink{display:inline-block;width:2px;height:1em;background:var(--neon);margin-left:1px;vertical-align:text-bottom;animation:cdBlink .85s step-end infinite}
+  @keyframes cdBlink{0%,100%{opacity:1}50%{opacity:0}}
+
+  /* 6 Swiper.js — sliding items */
+  .cd-swiper-demo{width:130px;height:56px;overflow:hidden;border-radius:7px;border:1px solid rgba(6,255,165,.2);position:relative}
+  .cd-swiper-track{display:flex;flex-direction:column;animation:cdSwipeUp 4.5s ease-in-out infinite}
+  .cd-sslide{height:56px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:600;letter-spacing:.04em;gap:.4rem;color:var(--text)}
+  @keyframes cdSwipeUp{0%,18%{transform:translateY(0)}33%,51%{transform:translateY(-56px)}66%,84%{transform:translateY(-112px)}100%{transform:translateY(-168px)}}
+
+  /* 7 AOS — reveal-in elements */
+  .cd-aos-demo{display:flex;flex-direction:column;gap:7px;width:130px}
+  .cd-aos-el{height:9px;border-radius:4px;transform:translateX(-20px);opacity:0;animation:cdAosIn 3s ease-out infinite}
+  .cd-aos-el:nth-child(1){background:rgba(247,37,133,.65);width:55%;animation-delay:0s}
+  .cd-aos-el:nth-child(2){background:rgba(6,255,165,.65);width:85%;animation-delay:.28s}
+  .cd-aos-el:nth-child(3){background:rgba(255,214,10,.65);width:68%;animation-delay:.56s}
+  .cd-aos-el:nth-child(4){background:rgba(247,37,133,.45);width:42%;animation-delay:.84s}
+  @keyframes cdAosIn{0%{transform:translateX(-20px);opacity:0}20%,75%{transform:translateX(0);opacity:1}90%,100%{transform:translateX(-20px);opacity:0}}
+
+  /* 8 Vanilla Tilt — rocking card */
+  .cd-tilt-preview{perspective:220px;width:88px;height:58px}
+  .cd-tilt-card{width:100%;height:100%;border-radius:8px;border:1px solid rgba(6,255,165,.45);background:rgba(6,255,165,.06);transform-style:preserve-3d;animation:cdTiltRock 3s ease-in-out infinite;position:relative;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:700;color:var(--neon);letter-spacing:.05em}
+  .cd-tilt-shine{position:absolute;inset:0;border-radius:8px;background:linear-gradient(135deg,rgba(255,255,255,.18),transparent 50%,rgba(255,255,255,.04));animation:cdTiltShine 3s ease-in-out infinite;pointer-events:none}
+  @keyframes cdTiltRock{0%,100%{transform:rotateX(-14deg) rotateY(-12deg)}50%{transform:rotateX(14deg) rotateY(12deg)}}
+  @keyframes cdTiltShine{0%,100%{opacity:1}50%{opacity:.2}}
+
+  /* 9 Lenis — smooth scrolling page mockup */
+  .cd-lenis-demo{width:108px;height:66px;border-radius:8px;border:1px solid rgba(255,214,10,.22);background:rgba(255,214,10,.04);display:flex;overflow:hidden}
+  .cd-lenis-lines{flex:1;padding:6px 8px;display:flex;flex-direction:column;gap:5px;animation:cdLenisScroll 2.8s cubic-bezier(.16,1,.3,1) infinite}
+  .cd-lline{height:4px;border-radius:2px;background:rgba(255,214,10,.35)}
+  .cd-lline:nth-child(2){width:75%}.cd-lline:nth-child(3){width:90%}.cd-lline:nth-child(4){width:60%}.cd-lline:nth-child(5){width:82%}.cd-lline:nth-child(6){width:70%}.cd-lline:nth-child(7){width:88%}
+  @keyframes cdLenisScroll{0%{transform:translateY(0)}50%{transform:translateY(-28px)}100%{transform:translateY(0)}}
+  .cd-lenis-bar{width:8px;background:rgba(255,255,255,.04);position:relative;flex-shrink:0}
+  .cd-lenis-thumb{width:4px;height:20px;border-radius:2px;background:var(--gold);box-shadow:0 0 6px var(--gold);position:absolute;left:50%;margin-left:-2px;animation:cdLenisThumb 2.8s cubic-bezier(.16,1,.3,1) infinite}
+  @keyframes cdLenisThumb{0%{top:4px}50%{top:calc(100% - 24px)}100%{top:4px}}
+
   /* ── DIVIDER ──────────────────────────────────────────── */
   .divider{height:1px;background:linear-gradient(90deg,transparent,rgba(247,37,133,.25),rgba(6,255,165,.22),transparent)}
 
@@ -309,6 +382,8 @@
     display:flex;align-items:center;justify-content:center;font-size:.9rem}
   .f-txt h4{font-weight:600;font-size:.88rem;margin-bottom:.15rem}
   .f-txt p{color:var(--muted);font-size:.8rem;line-height:1.55}
+  #drive-hint{margin-top:.75rem;font-size:.78rem;color:var(--muted);display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+  kbd{background:rgba(247,37,133,.1);border:1px solid rgba(247,37,133,.28);border-radius:4px;padding:.12rem .45rem;font-family:'Space Grotesk',sans-serif;font-size:.72rem;color:var(--pink-l);letter-spacing:.04em}
 
   /* ── STATS ────────────────────────────────────────────── */
   .stats-bg{padding:4.5rem 2rem;
@@ -452,15 +527,77 @@
       <p class="sec-sub">Each library brings unique interactive capabilities — all working together in a single GitHub-managed project.</p>
     </div>
     <div class="int-grid">
-      <div class="i-card" data-aos="fade-up" data-aos-delay="0"   data-tilt><div class="c-icon ip">🎲</div><h3 class="c-title">Three.js</h3><p class="c-desc">WebGL 3D in the browser — immersive scenes, shaders, and real-time GPU-accelerated animation.</p><div class="c-tags"><span class="tag tp">3D</span><span class="tag tp">WebGL</span><span class="tag">Real-time</span></div></div>
-      <div class="i-card" data-aos="fade-up" data-aos-delay="60"  data-tilt><div class="c-icon in">⚡</div><h3 class="c-title">GSAP</h3><p class="c-desc">Industry-standard animation — silky timelines, scroll-triggered reveals, morphing effects.</p><div class="c-tags"><span class="tag tn">Animation</span><span class="tag tn">ScrollTrigger</span><span class="tag">Timeline</span></div></div>
-      <div class="i-card" data-aos="fade-up" data-aos-delay="120" data-tilt><div class="c-icon ig">✨</div><h3 class="c-title">Particles.js</h3><p class="c-desc">Interactive particle systems — configure density, speed, linking, and mouse interactions.</p><div class="c-tags"><span class="tag tg">Particles</span><span class="tag tg">Canvas</span><span class="tag">Mouse</span></div></div>
-      <div class="i-card" data-aos="fade-up" data-aos-delay="0"   data-tilt><div class="c-icon io">📊</div><h3 class="c-title">Chart.js</h3><p class="c-desc">Animated data visualizations — radar, bar, doughnut charts, fully responsive with smooth entry.</p><div class="c-tags"><span class="tag to2">Data Viz</span><span class="tag">Charts</span><span class="tag">Responsive</span></div></div>
-      <div class="i-card" data-aos="fade-up" data-aos-delay="60"  data-tilt><div class="c-icon ic">🎯</div><h3 class="c-title">Typed.js</h3><p class="c-desc">Realistic typing animations on any element — adds a live, human feel to hero sections.</p><div class="c-tags"><span class="tag tp">Typing</span><span class="tag">UX</span><span class="tag">Animation</span></div></div>
-      <div class="i-card" data-aos="fade-up" data-aos-delay="120" data-tilt><div class="c-icon im">🎠</div><h3 class="c-title">Swiper.js</h3><p class="c-desc">Modern touch slider — 3D effects, dozens of transitions, full accessibility baked in.</p><div class="c-tags"><span class="tag tn">Carousel</span><span class="tag">Touch</span><span class="tag">A11y</span></div></div>
-      <div class="i-card" data-aos="fade-up" data-aos-delay="0"   data-tilt><div class="c-icon ip">👁️</div><h3 class="c-title">AOS</h3><p class="c-desc">Animate On Scroll — trigger entrance animations as elements enter the viewport.</p><div class="c-tags"><span class="tag tp">Scroll</span><span class="tag tp">Reveal</span><span class="tag">Viewport</span></div></div>
-      <div class="i-card" data-aos="fade-up" data-aos-delay="60"  data-tilt><div class="c-icon in">🃏</div><h3 class="c-title">Vanilla Tilt</h3><p class="c-desc">GPU-accelerated 3D parallax tilt on hover — feel it on every card in this grid right now.</p><div class="c-tags"><span class="tag tn">3D Hover</span><span class="tag">Parallax</span><span class="tag">GPU</span></div></div>
-      <div class="i-card" data-aos="fade-up" data-aos-delay="120" data-tilt><div class="c-icon ig">🌊</div><h3 class="c-title">Lenis</h3><p class="c-desc">Buttery smooth scroll with physics-based easing — makes the entire page feel silky.</p><div class="c-tags"><span class="tag tg">Smooth Scroll</span><span class="tag tg">Physics</span><span class="tag">UX</span></div></div>
+      <!-- Three.js: rotating CSS 3D cube -->
+      <div class="i-card" data-aos="fade-up" data-aos-delay="0" data-tilt>
+        <div class="c-demo"><div class="cd-cube-scene"><div class="cd-cube"><div class="cd-face cf"></div><div class="cd-face cb"></div><div class="cd-face cr"></div><div class="cd-face cl"></div><div class="cd-face ct"></div><div class="cd-face cbo"></div></div></div></div>
+        <h3 class="c-title">Three.js</h3>
+        <p class="c-desc">WebGL 3D in the browser — immersive scenes, shaders, and real-time GPU-accelerated animation.</p>
+        <div class="c-tags"><span class="tag tp">3D</span><span class="tag tp">WebGL</span><span class="tag">Real-time</span></div>
+      </div>
+      <!-- GSAP: staggered timeline bars -->
+      <div class="i-card" data-aos="fade-up" data-aos-delay="60" data-tilt>
+        <div class="c-demo"><div class="cd-gsap"><div class="cd-gbar"></div><div class="cd-gbar"></div><div class="cd-gbar"></div><div class="cd-gbar"></div></div></div>
+        <h3 class="c-title">GSAP</h3>
+        <p class="c-desc">Industry-standard animation — silky timelines, scroll-triggered reveals, morphing effects.</p>
+        <div class="c-tags"><span class="tag tn">Animation</span><span class="tag tn">ScrollTrigger</span><span class="tag">Timeline</span></div>
+      </div>
+      <!-- Particles.js: JS-populated floating dots -->
+      <div class="i-card" data-aos="fade-up" data-aos-delay="120" data-tilt>
+        <div class="c-demo"><div class="cd-pts" id="cd-pts3"></div></div>
+        <h3 class="c-title">Particles.js</h3>
+        <p class="c-desc">Interactive particle systems — configure density, speed, linking, and mouse interactions.</p>
+        <div class="c-tags"><span class="tag tg">Particles</span><span class="tag tg">Canvas</span><span class="tag">Mouse</span></div>
+      </div>
+      <!-- Chart.js: animated mini bar chart -->
+      <div class="i-card" data-aos="fade-up" data-aos-delay="0" data-tilt>
+        <div class="c-demo"><div class="cd-chart-mini"><div class="cd-cbar" style="height:42px"></div><div class="cd-cbar" style="height:54px"></div><div class="cd-cbar" style="height:36px"></div><div class="cd-cbar" style="height:48px"></div><div class="cd-cbar" style="height:30px"></div></div></div>
+        <h3 class="c-title">Chart.js</h3>
+        <p class="c-desc">Animated data visualizations — radar, bar, doughnut charts, fully responsive with smooth entry.</p>
+        <div class="c-tags"><span class="tag to2">Data Viz</span><span class="tag">Charts</span><span class="tag">Responsive</span></div>
+      </div>
+      <!-- Typed.js: live typing inside the card -->
+      <div class="i-card" data-aos="fade-up" data-aos-delay="60" data-tilt>
+        <div class="c-demo"><div class="cd-typed-demo"><span id="cd-typed5"></span><span class="cd-cursor-blink"></span></div></div>
+        <h3 class="c-title">Typed.js</h3>
+        <p class="c-desc">Realistic typing animations on any element — adds a live, human feel to hero sections.</p>
+        <div class="c-tags"><span class="tag tp">Typing</span><span class="tag">UX</span><span class="tag">Animation</span></div>
+      </div>
+      <!-- Swiper.js: CSS-animated sliding feature list -->
+      <div class="i-card" data-aos="fade-up" data-aos-delay="120" data-tilt>
+        <div class="c-demo"><div class="cd-swiper-demo"><div class="cd-swiper-track">
+          <div class="cd-sslide"><span style="color:var(--neon)">◆</span> Touch Slider</div>
+          <div class="cd-sslide"><span style="color:var(--pink)">◆</span> 3D Cube Mode</div>
+          <div class="cd-sslide"><span style="color:var(--gold)">◆</span> Auto-play</div>
+          <div class="cd-sslide"><span style="color:var(--neon)">◆</span> Touch Slider</div>
+        </div></div></div>
+        <h3 class="c-title">Swiper.js</h3>
+        <p class="c-desc">Modern touch slider — 3D effects, dozens of transitions, full accessibility baked in.</p>
+        <div class="c-tags"><span class="tag tn">Carousel</span><span class="tag">Touch</span><span class="tag">A11y</span></div>
+      </div>
+      <!-- AOS: slide-in reveal bars -->
+      <div class="i-card" data-aos="fade-up" data-aos-delay="0" data-tilt>
+        <div class="c-demo"><div class="cd-aos-demo"><div class="cd-aos-el"></div><div class="cd-aos-el"></div><div class="cd-aos-el"></div><div class="cd-aos-el"></div></div></div>
+        <h3 class="c-title">AOS</h3>
+        <p class="c-desc">Animate On Scroll — trigger entrance animations as elements enter the viewport.</p>
+        <div class="c-tags"><span class="tag tp">Scroll</span><span class="tag tp">Reveal</span><span class="tag">Viewport</span></div>
+      </div>
+      <!-- Vanilla Tilt: rocking 3D card preview -->
+      <div class="i-card" data-aos="fade-up" data-aos-delay="60" data-tilt>
+        <div class="c-demo"><div class="cd-tilt-preview"><div class="cd-tilt-card">3D Tilt<div class="cd-tilt-shine"></div></div></div></div>
+        <h3 class="c-title">Vanilla Tilt</h3>
+        <p class="c-desc">GPU-accelerated 3D parallax tilt on hover — feel it on every card in this grid right now.</p>
+        <div class="c-tags"><span class="tag tn">3D Hover</span><span class="tag">Parallax</span><span class="tag">GPU</span></div>
+      </div>
+      <!-- Lenis: smooth-scroll page mockup -->
+      <div class="i-card" data-aos="fade-up" data-aos-delay="120" data-tilt>
+        <div class="c-demo"><div class="cd-lenis-demo">
+          <div class="cd-lenis-lines"><div class="cd-lline"></div><div class="cd-lline"></div><div class="cd-lline"></div><div class="cd-lline"></div><div class="cd-lline"></div><div class="cd-lline"></div><div class="cd-lline"></div></div>
+          <div class="cd-lenis-bar"><div class="cd-lenis-thumb"></div></div>
+        </div></div>
+        <h3 class="c-title">Lenis</h3>
+        <p class="c-desc">Buttery smooth scroll with physics-based easing — makes the entire page feel silky.</p>
+        <div class="c-tags"><span class="tag tg">Smooth Scroll</span><span class="tag tg">Physics</span><span class="tag">UX</span></div>
+      </div>
     </div>
   </section>
 
@@ -534,12 +671,12 @@
       <div class="demo-layout">
         <div data-aos="fade-right">
           <span class="sec-lbl">Three.js — Live</span>
-          <h2 class="sec-title">Interactive<br><span class="grad">3D Scene</span></h2>
-          <p class="sec-sub" style="margin-bottom:1.4rem">Move your cursor over the canvas to orbit. Switch geometries live — all 60fps WebGL.</p>
+          <h2 class="sec-title">Interactive<br><span class="grad">3D Playground</span></h2>
+          <p class="sec-sub" style="margin-bottom:1.4rem">Drag to orbit. Pick Car or Robot — then drive with your keyboard or arrow keys.</p>
           <div class="f-list">
-            <div class="f-item"><div class="f-ico">🖱️</div><div class="f-txt"><h4>Mouse Orbit</h4><p>Geometry tracks cursor with smooth interpolation</p></div></div>
-            <div class="f-item"><div class="f-ico">💡</div><div class="f-txt"><h4>Dynamic Lighting</h4><p>Orbiting point lights create neon depth and sheen</p></div></div>
-            <div class="f-item"><div class="f-ico">🔄</div><div class="f-txt"><h4>Live Geometry Swap</h4><p>Switch shapes without any page reload</p></div></div>
+            <div class="f-item"><div class="f-ico">🖱️</div><div class="f-txt"><h4>Drag to Orbit</h4><p>Click and drag anywhere on the canvas to spin the camera freely</p></div></div>
+            <div class="f-item"><div class="f-ico">⌨️</div><div class="f-txt"><h4>Keyboard Drive</h4><p>W A S D or arrow keys — steer the car, walk the robot</p></div></div>
+            <div class="f-item"><div class="f-ico">🔄</div><div class="f-txt"><h4>Live Object Swap</h4><p>Switch between geometries, car and robot instantly</p></div></div>
           </div>
         </div>
         <div data-aos="fade-left">
@@ -548,8 +685,11 @@
             <button class="d-btn active" onclick="setGeo('torusKnot',this)">Torus Knot</button>
             <button class="d-btn" onclick="setGeo('icosahedron',this)">Icosahedron</button>
             <button class="d-btn" onclick="setGeo('octahedron',this)">Octahedron</button>
-            <button class="d-btn" onclick="toggleWire(this)">Wireframe</button>
+            <button class="d-btn" onclick="setGeo('car',this)">🚗 Car</button>
+            <button class="d-btn" onclick="setGeo('robot',this)">🤖 Robot</button>
+            <button class="d-btn" id="wire-btn" onclick="toggleWire(this)">Wireframe</button>
           </div>
+          <div id="drive-hint" style="display:none">⌨️ &nbsp;<kbd>W A S D</kbd> or <kbd>↑ ↓ ← →</kbd> to move &nbsp;·&nbsp; Drag canvas to orbit</div>
         </div>
       </div>
     </div>
@@ -742,6 +882,33 @@
 
   VanillaTilt.init(document.querySelectorAll('[data-tilt]'), { max:8, speed:450, glare:true, 'max-glare':.1 });
 
+  /* ═══════════════ CARD MINI-DEMOS ══════════════════════════ */
+  /* Typed.js inside the Typed.js card */
+  new Typed('#cd-typed5', {
+    strings: ['gsap.to()', 'timeline()', 'ScrollTrigger', 'stagger()'],
+    typeSpeed:55, backSpeed:30, loop:true, backDelay:1400, showCursor:false
+  });
+
+  /* Particles.js card — floating colored dots via JS */
+  (function() {
+    const wrap = document.getElementById('cd-pts3');
+    const colors = ['#f72585','#06ffa5','#ffd60a','#ff6d00','#ff4361'];
+    for(let i=0; i<12; i++) {
+      const pt = document.createElement('div');
+      pt.className = 'cd-pt';
+      const sz = 3 + Math.random()*4;
+      const c = colors[i % colors.length];
+      pt.style.cssText =
+        `left:${Math.random()*90}%;top:${Math.random()*80}%;` +
+        `width:${sz}px;height:${sz}px;background:${c};` +
+        `box-shadow:0 0 ${sz*2}px ${c};` +
+        `--tx:${(Math.random()-.5)*28}px;--ty:${(Math.random()-.5)*22}px;` +
+        `animation-duration:${2+Math.random()*2.5}s;` +
+        `animation-delay:${-Math.random()*3}s`;
+      wrap.appendChild(pt);
+    }
+  })();
+
   /* ═══════════════ TYPED.JS ══════════════════════════════════ */
   new Typed('#h-typed', {
     strings:['Three.js 3D Scenes','GSAP Scroll Animations','Lottie Vector Animations',
@@ -821,86 +988,272 @@
   }
 
   /* ═══════════════ THREE.JS DEMO SECTION ════════════════════ */
-  let dScene,dCam,dRenderer,dMesh,dWire,wireOn=false;
+  let dScene, dCam, dRenderer, demoGroup = null;
+  let dMesh, dWire, wireOn = false, currentGeo = 'torusKnot';
+  let robotParts = {}, wheelMeshes = [], walkCycle = 0, demoPlaying = false;
+
+  /* Keyboard state — only block page scroll when actively driving in the 3D section */
+  const keys = {};
+  window.addEventListener('keydown', e => {
+    if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','KeyW','KeyA','KeyS','KeyD'].includes(e.code)){
+      keys[e.code] = true;
+      if(demoPlaying && (currentGeo==='car'||currentGeo==='robot')) e.preventDefault();
+    }
+  }, false);
+  window.addEventListener('keyup', e => { keys[e.code] = false; });
+
+  /* Camera spherical-coordinate orbit */
+  let camTheta=0.4, camPhi=1.1, camR=4.5, tTheta=0.4, tPhi=1.1;
+  let orbitDown=false, orbitSX=0, orbitSY=0, orbitBT=0, orbitBP=0;
+
   {
     const el = document.getElementById('three-demo');
     dRenderer = new THREE.WebGLRenderer({ antialias:true, alpha:true, powerPreference:'high-performance' });
-    dRenderer.setPixelRatio(Math.min(devicePixelRatio,2));
+    dRenderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
     dRenderer.setSize(el.offsetWidth, el.offsetHeight);
     dRenderer.setClearColor(0x100818, 1);
     el.appendChild(dRenderer.domElement);
+    el.style.cursor = 'grab';
 
     dScene = new THREE.Scene();
-    dCam   = new THREE.PerspectiveCamera(45, el.offsetWidth/el.offsetHeight, .1, 100);
-    dCam.position.z = 4;
-    dScene.add(new THREE.AmbientLight(0xfff0f8,.28));
+    dCam   = new THREE.PerspectiveCamera(45, el.offsetWidth/el.offsetHeight, 0.1, 100);
+    dScene.add(new THREE.AmbientLight(0xfff0f8, 0.35));
+    const dl1 = new THREE.PointLight(0xf72585, 4,   18); dl1.position.set( 4, 4, 4);  dScene.add(dl1);
+    const dl2 = new THREE.PointLight(0x06ffa5, 3.5, 18); dl2.position.set(-4,-2, 4);  dScene.add(dl2);
+    const dl3 = new THREE.PointLight(0xffd60a, 2.2, 14); dl3.position.set( 0, 4,-4);  dScene.add(dl3);
+    const grid = new THREE.GridHelper(18, 26, 0x220b30, 0x1a0822); grid.position.y=-1.6; dScene.add(grid);
 
-    const dl1 = new THREE.PointLight(0xf72585,3.5,14); dl1.position.set(3,3,3);   dScene.add(dl1);
-    const dl2 = new THREE.PointLight(0x06ffa5,3.2,14); dl2.position.set(-3,-3,3); dScene.add(dl2);
-    const grid= new THREE.GridHelper(12,20,0x220b30,0x220b30); grid.position.y=-2.2; dScene.add(grid);
+    buildDemoObject('torusKnot');
 
-    buildMesh('torusKnot');
+    /* Orbit — mouse */
+    el.addEventListener('mousedown', e => {
+      orbitDown=true; orbitSX=e.clientX; orbitSY=e.clientY; orbitBT=tTheta; orbitBP=tPhi;
+      el.style.cursor='grabbing';
+    });
+    window.addEventListener('mouseup',  () => { orbitDown=false; el.style.cursor='grab'; });
+    window.addEventListener('mousemove', e => {
+      if(!orbitDown) return;
+      tTheta = orbitBT + (e.clientX-orbitSX)*0.007;
+      tPhi   = Math.max(0.12, Math.min(2.8, orbitBP+(e.clientY-orbitSY)*0.007));
+    });
+    /* Orbit — touch */
+    el.addEventListener('touchstart', e => {
+      const t=e.touches[0]; orbitDown=true;
+      orbitSX=t.clientX; orbitSY=t.clientY; orbitBT=tTheta; orbitBP=tPhi;
+    }, {passive:true});
+    window.addEventListener('touchend',  () => { orbitDown=false; });
+    window.addEventListener('touchmove', e => {
+      if(!orbitDown) return; const t=e.touches[0];
+      tTheta = orbitBT + (t.clientX-orbitSX)*0.007;
+      tPhi   = Math.max(0.12, Math.min(2.8, orbitBP+(t.clientY-orbitSY)*0.007));
+    }, {passive:true});
+    /* Scroll to zoom */
+    el.addEventListener('wheel', e => { camR=Math.max(2.5,Math.min(9,camR+e.deltaY*0.004)); e.preventDefault(); }, {passive:false});
 
-    let dmx=0, dmy=0, demoPlaying=false;
-    el.addEventListener('mousemove', e => {
-      const r=el.getBoundingClientRect();
-      dmx=((e.clientX-r.left)/r.width-.5)*2;
-      dmy=((e.clientY-r.top)/r.height-.5)*2;
-    }, { passive:true });
-
-    /* Only render demo when it's visible */
-    const demoObs = new IntersectionObserver(([e]) => { demoPlaying = e.isIntersecting; }, { threshold:0 });
+    const demoObs = new IntersectionObserver(([e])=>{ demoPlaying=e.isIntersecting; },{threshold:0});
     demoObs.observe(el);
 
     let dt=0;
     (function da() {
       requestAnimationFrame(da);
       if(!demoPlaying) return;
-      dt+=.01;
-      if(dMesh){
-        dMesh.rotation.x += .007 + dmy*.004;
-        dMesh.rotation.y += .009 + dmx*.004;
-        if(dWire) dWire.rotation.copy(dMesh.rotation);
+      dt += 0.01;
+      /* Smooth spherical camera */
+      camTheta += (tTheta-camTheta)*0.09;
+      camPhi   += (tPhi  -camPhi  )*0.09;
+      const sp=Math.sin(camPhi), cp=Math.cos(camPhi), st=Math.sin(camTheta), ct=Math.cos(camTheta);
+      dCam.position.set(camR*sp*st, camR*cp, camR*sp*ct);
+      dCam.lookAt(0, 0, 0);
+      dl1.position.set(Math.sin(dt)*5.5, 3.5, Math.cos(dt)*5.5);
+      if(demoGroup){
+        if(currentGeo==='car')        updateCar();
+        else if(currentGeo==='robot') updateRobot(dt);
+        else if(!orbitDown)           demoGroup.rotation.y += 0.006;
       }
-      dl1.position.set(Math.sin(dt)*4.5, 2, Math.cos(dt)*4.5);
-      dRenderer.render(dScene,dCam);
+      dRenderer.render(dScene, dCam);
     })();
   }
 
-  function buildMesh(type) {
-    if(dMesh){ dScene.remove(dMesh); dScene.remove(dWire); }
-    let geo;
-    if(type==='torusKnot')   geo=new THREE.TorusKnotGeometry(.9,.27,100,14);
-    if(type==='icosahedron') geo=new THREE.IcosahedronGeometry(1.2,1);
-    if(type==='octahedron')  geo=new THREE.OctahedronGeometry(1.3,2);
-    dMesh = new THREE.Mesh(geo, new THREE.MeshPhongMaterial({ color:0xf72585, emissive:0x2d0015, specular:0x06ffa5, shininess:130 }));
-    dScene.add(dMesh);
-    dWire = new THREE.Mesh(geo.clone(), new THREE.MeshBasicMaterial({ color:0x06ffa5, wireframe:true, transparent:true, opacity:wireOn?.42:.07 }));
-    dScene.add(dWire);
+  function updateCar() {
+    const spd=0.065, turn=0.048; let mv=false;
+    if(keys['ArrowUp']   ||keys['KeyW']){ demoGroup.translateZ(-spd);     mv=true; }
+    if(keys['ArrowDown'] ||keys['KeyS']){ demoGroup.translateZ( spd*.6);  mv=true; }
+    if(keys['ArrowLeft'] ||keys['KeyA']) demoGroup.rotation.y += turn;
+    if(keys['ArrowRight']||keys['KeyD']) demoGroup.rotation.y -= turn;
+    demoGroup.position.x = Math.max(-6,Math.min(6,demoGroup.position.x));
+    demoGroup.position.z = Math.max(-6,Math.min(6,demoGroup.position.z));
+    if(mv) wheelMeshes.forEach(w => w.rotation.x += 0.15);
   }
-  function setGeo(t,btn){ document.querySelectorAll('.d-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); buildMesh(t); }
-  function toggleWire(btn){ wireOn=!wireOn; if(dWire) dWire.material.opacity=wireOn?.42:.07; btn.classList.toggle('active',wireOn); }
 
-  /* ═══════════════ CHART.JS ══════════════════════════════════ */
+  function updateRobot(dt) {
+    const spd=0.045; let mv=false;
+    if(keys['ArrowUp']   ||keys['KeyW']){ demoGroup.position.z-=spd; demoGroup.rotation.y=0;          mv=true; }
+    if(keys['ArrowDown'] ||keys['KeyS']){ demoGroup.position.z+=spd; demoGroup.rotation.y=Math.PI;    mv=true; }
+    if(keys['ArrowLeft'] ||keys['KeyA']){ demoGroup.position.x-=spd; demoGroup.rotation.y=-Math.PI/2; mv=true; }
+    if(keys['ArrowRight']||keys['KeyD']){ demoGroup.position.x+=spd; demoGroup.rotation.y= Math.PI/2; mv=true; }
+    demoGroup.position.x = Math.max(-6,Math.min(6,demoGroup.position.x));
+    demoGroup.position.z = Math.max(-6,Math.min(6,demoGroup.position.z));
+    if(mv){
+      walkCycle += 0.22;
+      const sw=Math.sin(walkCycle)*0.52;
+      if(robotParts.lLeg) robotParts.lLeg.rotation.x= sw;
+      if(robotParts.rLeg) robotParts.rLeg.rotation.x=-sw;
+      if(robotParts.lArm) robotParts.lArm.rotation.x=-sw*.5;
+      if(robotParts.rArm) robotParts.rArm.rotation.x= sw*.5;
+    } else {
+      ['lLeg','rLeg','lArm','rArm'].forEach(k=>{ if(robotParts[k]) robotParts[k].rotation.x*=0.82; });
+      if(robotParts.head) robotParts.head.position.y = 1.17+Math.sin(dt*1.8)*0.022;
+    }
+  }
+
+  /* Helper: build a mesh and add it to a parent */
+  function mk(parent, geo, mat, px,py,pz) {
+    const m = new THREE.Mesh(geo, mat);
+    if(px!==undefined) m.position.set(px,py,pz);
+    parent.add(m); return m;
+  }
+
+  function buildDemoObject(type) {
+    if(demoGroup) dScene.remove(demoGroup);
+    demoGroup=null; wheelMeshes=[]; robotParts={}; currentGeo=type; wireOn=false;
+    const hint = document.getElementById('drive-hint');
+    if(hint) hint.style.display=(type==='car'||type==='robot')?'flex':'none';
+    if(type==='car')   { demoGroup=buildCar();   }
+    else if(type==='robot'){ demoGroup=buildRobot(); }
+    else {
+      let geo;
+      if(type==='torusKnot')   geo=new THREE.TorusKnotGeometry(.9,.27,100,14);
+      if(type==='icosahedron') geo=new THREE.IcosahedronGeometry(1.2,1);
+      if(type==='octahedron')  geo=new THREE.OctahedronGeometry(1.3,2);
+      dMesh=new THREE.Mesh(geo, new THREE.MeshPhongMaterial({color:0xf72585,emissive:0x2d0015,specular:0x06ffa5,shininess:130}));
+      dWire=new THREE.Mesh(geo.clone(), new THREE.MeshBasicMaterial({color:0x06ffa5,wireframe:true,transparent:true,opacity:0.07}));
+      demoGroup=new THREE.Group(); demoGroup.add(dMesh); demoGroup.add(dWire);
+    }
+    dScene.add(demoGroup);
+  }
+
+  function buildCar() {
+    const g=new THREE.Group();
+    const mBody=new THREE.MeshPhongMaterial({color:0xf72585,emissive:0x1a000e,specular:0xff85c1,shininess:180});
+    const mDark=new THREE.MeshPhongMaterial({color:0x0d0d0d,shininess:60});
+    const mGlass=new THREE.MeshPhongMaterial({color:0x06ffa5,transparent:true,opacity:.45,shininess:200});
+    const mGold=new THREE.MeshPhongMaterial({color:0xffd60a,shininess:200});
+    const mGlow=new THREE.MeshBasicMaterial({color:0xffd60a});
+    const mBrake=new THREE.MeshBasicMaterial({color:0xff4361});
+    /* Main body */
+    mk(g,new THREE.BoxGeometry(2.5,.46,1.08),mBody,  0,.23, 0);
+    /* Cabin */
+    mk(g,new THREE.BoxGeometry(1.35,.4,1.0), mBody, -.1,.64, 0);
+    /* Windshields */
+    mk(g,new THREE.BoxGeometry(.04,.38,.86), mGlass,  .57,.62,0);
+    mk(g,new THREE.BoxGeometry(.04,.38,.86), mGlass, -.77,.62,0);
+    /* Spoiler */
+    mk(g,new THREE.BoxGeometry(.08,.22,1.0), mDark, -1.26,.5, 0);
+    mk(g,new THREE.BoxGeometry(.72,.04,1.0), mDark, -1.0, .6, 0);
+    /* Bumpers */
+    mk(g,new THREE.BoxGeometry(.06,.18,1.0), mDark,  1.24,.16,0);
+    mk(g,new THREE.BoxGeometry(.06,.18,1.0), mDark, -1.24,.16,0);
+    /* Headlights */
+    [ [1.26,.26, .28],[1.26,.26,-.28]].forEach(p=>mk(g,new THREE.BoxGeometry(.05,.1,.2),mGlow,...p));
+    /* Taillights */
+    [[-1.26,.26, .28],[-1.26,.26,-.28]].forEach(p=>mk(g,new THREE.BoxGeometry(.05,.1,.2),mBrake,...p));
+    /* Wheels + hubs */
+    [[.76,0,.64],[-.76,0,.64],[.76,0,-.64],[-.76,0,-.64]].forEach(p=>{
+      const wm=new THREE.Mesh(new THREE.CylinderGeometry(.27,.27,.19,20),mDark);
+      wm.position.set(...p); wm.rotation.z=Math.PI/2; g.add(wm);
+      mk(g,new THREE.CylinderGeometry(.11,.11,.21,8),mGold,...p).rotation.z=Math.PI/2;
+      wheelMeshes.push(wm);
+    });
+    g.position.y=0.32; return g;
+  }
+
+  function buildRobot() {
+    const g=new THREE.Group();
+    const mN=new THREE.MeshPhongMaterial({color:0x06ffa5,emissive:0x003322,specular:0xffffff,shininess:150});
+    const mD=new THREE.MeshPhongMaterial({color:0x0a2218,shininess:50});
+    const mG=new THREE.MeshPhongMaterial({color:0xffd60a,shininess:200,specular:0xffffff});
+    const mE=new THREE.MeshBasicMaterial({color:0xffd60a});
+    const mC=new THREE.MeshBasicMaterial({color:0xf72585});
+    /* Torso */
+    mk(g,new THREE.BoxGeometry(.72,.88,.44),mN, 0,.44,0);
+    mk(g,new THREE.BoxGeometry(.38,.32,.04),mD, 0,.44,.23); /* chest panel */
+    mk(g,new THREE.SphereGeometry(.065,8,8),mC, 0,.51,.24); /* core */
+    mk(g,new THREE.BoxGeometry(.72,.1,.44), mD, 0, 0,  0);  /* belt */
+    /* Neck + head */
+    mk(g,new THREE.CylinderGeometry(.09,.09,.14,8),mG, 0,.93,0);
+    const head=mk(g,new THREE.BoxGeometry(.55,.46,.46),mN, 0,1.17,0);
+    robotParts.head=head;
+    /* Ear sensors */
+    [-.29,.29].forEach(x=>mk(g,new THREE.CylinderGeometry(.04,.04,.07,6),mG,x,1.2,0));
+    /* Eyes */
+    [[-.13,1.18,.24],[.13,1.18,.24]].forEach(p=>mk(g,new THREE.BoxGeometry(.1,.065,.03),mE,...p));
+    mk(g,new THREE.BoxGeometry(.2,.03,.03),mE, 0,1.07,.24); /* mouth */
+    /* Arms (pivot at shoulder) */
+    const lArm=new THREE.Group(); lArm.position.set(-.46,.78,0);
+    mk(lArm,new THREE.BoxGeometry(.21,.62,.21),mN, 0,-.31,0);
+    mk(lArm,new THREE.SphereGeometry(.13,8,8),mD, 0,-.66,0);
+    mk(lArm,new THREE.SphereGeometry(.1,8,8), mG, 0,  .04,0);
+    g.add(lArm); robotParts.lArm=lArm;
+    const rArm=new THREE.Group(); rArm.position.set(.46,.78,0);
+    mk(rArm,new THREE.BoxGeometry(.21,.62,.21),mN, 0,-.31,0);
+    mk(rArm,new THREE.SphereGeometry(.13,8,8),mD, 0,-.66,0);
+    mk(rArm,new THREE.SphereGeometry(.1,8,8), mG, 0,  .04,0);
+    g.add(rArm); robotParts.rArm=rArm;
+    /* Hips */
+    mk(g,new THREE.BoxGeometry(.66,.16,.4),mD, 0,-.08,0);
+    /* Legs (pivot at hip) */
+    const lLeg=new THREE.Group(); lLeg.position.set(-.21,-.08,0);
+    mk(lLeg,new THREE.BoxGeometry(.24,.7,.24), mN, 0,-.35,0);
+    mk(lLeg,new THREE.BoxGeometry(.24,.1,.36), mD, 0,-.74,.06);
+    mk(lLeg,new THREE.SphereGeometry(.1,8,8),  mG, 0, .02,0);
+    g.add(lLeg); robotParts.lLeg=lLeg;
+    const rLeg=new THREE.Group(); rLeg.position.set(.21,-.08,0);
+    mk(rLeg,new THREE.BoxGeometry(.24,.7,.24), mN, 0,-.35,0);
+    mk(rLeg,new THREE.BoxGeometry(.24,.1,.36), mD, 0,-.74,.06);
+    mk(rLeg,new THREE.SphereGeometry(.1,8,8),  mG, 0, .02,0);
+    g.add(rLeg); robotParts.rLeg=rLeg;
+    g.position.y=0.88; return g;
+  }
+
+  function setGeo(t,btn){
+    document.querySelectorAll('.d-btn:not(#wire-btn)').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('wire-btn').classList.remove('active');
+    buildDemoObject(t);
+  }
+  function toggleWire(btn){
+    wireOn=!wireOn;
+    if(dWire) dWire.material.opacity=wireOn?.42:.07;
+    btn.classList.toggle('active',wireOn);
+  }
+
+  /* ═══════════════ CHART.JS — pop-in on scroll ══════════════ */
   Chart.defaults.color='#a07090'; Chart.defaults.borderColor='rgba(247,37,133,.06)';
-  new Chart(document.getElementById('radar-chart'),{type:'radar',data:{
-    labels:['Performance','Ease of Use','Community','Docs','Ecosystem','Features'],
-    datasets:[
-      {label:'GSAP',     data:[98,88,95,93,90,97],borderColor:'#f72585',backgroundColor:'rgba(247,37,133,.1)',borderWidth:2,pointBackgroundColor:'#f72585'},
-      {label:'Three.js', data:[95,72,98,84,86,99],borderColor:'#06ffa5',backgroundColor:'rgba(6,255,165,.1)',borderWidth:2,pointBackgroundColor:'#06ffa5'},
-      {label:'Chart.js', data:[91,96,91,97,88,87],borderColor:'#ffd60a',backgroundColor:'rgba(255,214,10,.1)',borderWidth:2,pointBackgroundColor:'#ffd60a'},
-    ]},options:{responsive:true,
-    scales:{r:{grid:{color:'rgba(247,37,133,.07)'},angleLines:{color:'rgba(247,37,133,.07)'},pointLabels:{color:'#a07090',font:{size:11}},ticks:{display:false},suggestedMin:0,suggestedMax:100}},
-    plugins:{legend:{labels:{color:'#a07090',usePointStyle:true}}}}
-  });
-  new Chart(document.getElementById('bar-chart'),{type:'bar',data:{
-    labels:['Three.js','GSAP','Swiper','Chart.js','AOS','Typed.js','Particles','V-Tilt'],
-    datasets:[{label:'KB',data:[588,68,142,76,14,11,26,10],
-      backgroundColor:['rgba(247,37,133,.75)','rgba(6,255,165,.75)','rgba(255,214,10,.75)','rgba(255,109,0,.75)','rgba(255,67,97,.75)','rgba(255,133,193,.75)','rgba(247,37,133,.5)','rgba(6,255,165,.5)'],
-      borderColor:['#f72585','#06ffa5','#ffd60a','#ff6d00','#ff4361','#ff85c1','#f72585','#06ffa5'],
-      borderWidth:1,borderRadius:7}]},
-    options:{responsive:true,plugins:{legend:{display:false}},
-    scales:{y:{grid:{color:'rgba(247,37,133,.04)'},ticks:{color:'#a07090'}},x:{grid:{display:false},ticks:{color:'#a07090',font:{size:10}}}}}
+  ScrollTrigger.create({ trigger:'#charts', start:'top 72%', once:true,
+    onEnter() {
+      new Chart(document.getElementById('radar-chart'),{type:'radar',data:{
+        labels:['Performance','Ease of Use','Community','Docs','Ecosystem','Features'],
+        datasets:[
+          {label:'GSAP',     data:[98,88,95,93,90,97],borderColor:'#f72585',backgroundColor:'rgba(247,37,133,.1)',borderWidth:2,pointBackgroundColor:'#f72585'},
+          {label:'Three.js', data:[95,72,98,84,86,99],borderColor:'#06ffa5',backgroundColor:'rgba(6,255,165,.1)',borderWidth:2,pointBackgroundColor:'#06ffa5'},
+          {label:'Chart.js', data:[91,96,91,97,88,87],borderColor:'#ffd60a',backgroundColor:'rgba(255,214,10,.1)',borderWidth:2,pointBackgroundColor:'#ffd60a'},
+        ]},options:{responsive:true,
+        animation:{ duration:1100, easing:'easeOutQuart' },
+        scales:{r:{grid:{color:'rgba(247,37,133,.07)'},angleLines:{color:'rgba(247,37,133,.07)'},pointLabels:{color:'#a07090',font:{size:11}},ticks:{display:false},suggestedMin:0,suggestedMax:100}},
+        plugins:{legend:{labels:{color:'#a07090',usePointStyle:true}}}}
+      });
+      new Chart(document.getElementById('bar-chart'),{type:'bar',data:{
+        labels:['Three.js','GSAP','Swiper','Chart.js','AOS','Typed.js','Particles','V-Tilt'],
+        datasets:[{label:'KB',data:[588,68,142,76,14,11,26,10],
+          backgroundColor:['rgba(247,37,133,.75)','rgba(6,255,165,.75)','rgba(255,214,10,.75)','rgba(255,109,0,.75)','rgba(255,67,97,.75)','rgba(255,133,193,.75)','rgba(247,37,133,.5)','rgba(6,255,165,.5)'],
+          borderColor:['#f72585','#06ffa5','#ffd60a','#ff6d00','#ff4361','#ff85c1','#f72585','#06ffa5'],
+          borderWidth:1,borderRadius:7}]},
+        options:{responsive:true,plugins:{legend:{display:false}},
+        animation:{ duration:900, easing:'easeOutQuart',
+          delay(ctx){ return ctx.dataIndex * 90; } },
+        scales:{y:{grid:{color:'rgba(247,37,133,.04)'},ticks:{color:'#a07090'}},x:{grid:{display:false},ticks:{color:'#a07090',font:{size:10}}}}}
+      });
+    }
   });
 
   /* ═══════════════ GSAP SCROLL ANIMATIONS ═══════════════════ */
