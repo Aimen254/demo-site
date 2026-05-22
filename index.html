@@ -3,1310 +3,617 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>InteractX — Frontend Integration Framework</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.5/swiper-bundle.min.css" />
+  <title>InteractX — Frontend. Reimagined.</title>
+  <meta name="description" content="A premium interactive showcase of modern frontend libraries — Three.js, GSAP, Chart.js and more." />
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- GSAP synchronous (needed immediately for preloader) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <!-- Other libraries (preloader masks load time) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/bundled/lenis.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js" defer></script>
 
   <style>
-  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  /* ══════════════════════════════════════════
+     RESET
+  ══════════════════════════════════════════ */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  img, svg { display: block; }
 
-  :root{
-    --bg:     #07040a;
-    --bg2:    #100818;
-    --card:   rgba(16,8,24,.92);
-    --pink:   #f72585;
-    --pink-l: #ff85c1;
-    --neon:   #06ffa5;
-    --gold:   #ffd60a;
-    --orange: #ff6d00;
-    --coral:  #ff4361;
-    --text:   #fff6fc;
-    --muted:  #a07090;
-    --border: rgba(247,37,133,.14);
-    --gp:     0 0 40px rgba(247,37,133,.5);
-    --gn:     0 0 40px rgba(6,255,165,.42);
-    --gg:     0 0 40px rgba(255,214,10,.38);
+  /* ══════════════════════════════════════════
+     CUSTOM PROPERTIES
+  ══════════════════════════════════════════ */
+  :root {
+    --bg-primary:        #0a0a0f;
+    --bg-secondary:      #0f0f1a;
+    --bg-tertiary:       #141428;
+    --bg-card:           rgba(15,15,26,0.92);
+
+    --accent-cyan:       #00d4ff;
+    --accent-cyan-dim:   rgba(0,212,255,0.15);
+    --accent-purple:     #7c3aed;
+    --accent-purple-l:   #a78bfa;
+    --accent-green:      #00ff88;
+    --accent-pink:       #f72585;
+    --accent-orange:     #ff6d00;
+
+    --text-primary:      #ffffff;
+    --text-secondary:    #a0aec0;
+    --text-muted:        #4a5568;
+
+    --glass:             rgba(255,255,255,0.05);
+    --glass-strong:      rgba(255,255,255,0.08);
+    --glass-border:      rgba(255,255,255,0.10);
+    --glass-border-s:    rgba(255,255,255,0.18);
+
+    --glow-cyan:         0 0 40px rgba(0,212,255,0.45),  0 0 80px rgba(0,212,255,0.15);
+    --glow-purple:       0 0 40px rgba(124,58,237,0.45), 0 0 80px rgba(124,58,237,0.15);
+    --glow-green:        0 0 40px rgba(0,255,136,0.45),  0 0 80px rgba(0,255,136,0.15);
+    --glow-pink:         0 0 40px rgba(247,37,133,0.45), 0 0 80px rgba(247,37,133,0.15);
+
+    --card-shadow:       0 8px 40px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.06) inset;
+    --max-w:             1200px;
+    --sec-pad:           7rem 2rem;
+    --nav-h:             70px;
+
+    --font-sans:         'Inter', system-ui, sans-serif;
+    --font-display:      'Space Grotesk', 'Inter', sans-serif;
+    --font-mono:         'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
   }
 
-  html{scroll-behavior:smooth}
-  body{
-    font-family:'Inter',sans-serif;background:var(--bg);
-    color:var(--text);overflow-x:hidden;cursor:none;
-    /* Static radial gradients replace heavy filter:blur orbs — zero GPU cost */
-    background-image:
-      radial-gradient(ellipse 80% 50% at 95% 0%,   rgba(247,37,133,.13) 0%,transparent 60%),
-      radial-gradient(ellipse 70% 50% at 0%  75%,   rgba(6,255,165,.10)  0%,transparent 60%),
-      radial-gradient(ellipse 60% 40% at 55% 105%,  rgba(255,214,10,.09) 0%,transparent 60%);
+  /* ══════════════════════════════════════════
+     BASE
+  ══════════════════════════════════════════ */
+  html {
+    scroll-behavior: smooth;
+    height: 100%;
+  }
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* ── SCROLL PROGRESS ──────────────────────────────────── */
-  #prog{position:fixed;top:0;left:0;height:2px;width:0%;z-index:10000;
-    background:linear-gradient(90deg,var(--pink),var(--gold),var(--neon));
-    box-shadow:0 0 10px var(--pink);transition:width .04s linear;pointer-events:none}
+  /* Lenis smooth scroll */
+  html.lenis { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto; }
 
-  /* ── PRELOADER ────────────────────────────────────────── */
-  #preloader{
-    position:fixed;inset:0;z-index:99999;
-    display:flex;align-items:center;justify-content:center;
-    background:var(--bg2);
-  }
-  /* Spinning rings */
-  .pre-rings{position:relative;width:130px;height:130px;margin:0 auto 2rem;flex-shrink:0}
-  .pre-ring{position:absolute;border-radius:50%;border:2px solid transparent;top:50%;left:50%;transform:translate(-50%,-50%)}
-  .pr1{width:130px;height:130px;border-top-color:var(--pink);border-right-color:var(--pink);
-    animation:spin 1.1s linear infinite;box-shadow:0 0 18px rgba(247,37,133,.4)}
-  .pr2{width:95px;height:95px;border-bottom-color:var(--neon);border-left-color:var(--neon);
-    animation:spin .8s linear infinite reverse;box-shadow:0 0 14px rgba(6,255,165,.35)}
-  .pr3{width:62px;height:62px;border-top-color:var(--gold);border-right-color:var(--gold);
-    animation:spin 1.4s linear infinite;box-shadow:0 0 10px rgba(255,214,10,.35)}
-  .pre-dot{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-    width:18px;height:18px;border-radius:50%;background:var(--pink-l);
-    box-shadow:0 0 20px var(--pink-l);animation:pdot 1.1s ease-in-out infinite alternate}
-  @keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
-  @keyframes pdot{0%{opacity:.4;transform:translate(-50%,-50%) scale(.6)}100%{opacity:1;transform:translate(-50%,-50%) scale(1.2)}}
+  /* Text selection */
+  ::selection { background: rgba(0,212,255,0.22); color: #fff; }
 
-  .pre-body{text-align:center;display:flex;flex-direction:column;align-items:center}
-  .pre-logo{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);
-    font-weight:800;letter-spacing:-.03em;margin-bottom:1.6rem;
-    background:linear-gradient(135deg,var(--pink-l),var(--neon),var(--gold));
-    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-  .pre-bar{width:220px;height:2px;background:rgba(255,255,255,.1);
-    border-radius:2px;margin:0 auto 1rem;overflow:hidden}
-  .pre-fill{height:100%;width:0%;border-radius:2px;
-    background:linear-gradient(90deg,var(--pink),var(--gold),var(--neon));
-    box-shadow:0 0 8px var(--pink)}
-  #pre-num{font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:700;
-    color:var(--muted);letter-spacing:.15em}
-
-  /* Curtain halves (slide over the loader to reveal page) */
-  #pre-top{position:fixed;top:0;left:0;right:0;height:50%;background:var(--bg2);z-index:99998;transform:translateY(0)}
-  #pre-bot{position:fixed;bottom:0;left:0;right:0;height:50%;background:var(--bg2);z-index:99998;transform:translateY(0)}
-
-  /* ── CURSOR ───────────────────────────────────────────── */
-  #cur{width:10px;height:10px;background:var(--pink);border-radius:50%;
-    position:fixed;top:0;left:0;z-index:9996;pointer-events:none;
-    will-change:transform;
-    box-shadow:0 0 14px var(--pink),0 0 28px rgba(247,37,133,.3)}
-  #cur-ring{width:34px;height:34px;border:1.5px solid rgba(247,37,133,.38);
-    border-radius:50%;position:fixed;top:0;left:0;z-index:9995;pointer-events:none;
-    will-change:transform}
-
-  /* ── NAV ──────────────────────────────────────────────── */
-  nav{position:fixed;inset:0 0 auto 0;z-index:1000;padding:.85rem 2.5rem;
-    display:flex;align-items:center;justify-content:space-between;
-    background:rgba(7,4,10,.82);backdrop-filter:blur(20px);
-    border-bottom:1px solid var(--border);transition:background .3s}
-  .n-logo{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:800;
-    background:linear-gradient(135deg,var(--pink-l),var(--neon));
-    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-  .n-links{display:flex;gap:2rem;list-style:none}
-  .n-links a{color:var(--muted);text-decoration:none;font-size:.875rem;font-weight:500;
-    letter-spacing:.02em;transition:color .22s}
-  .n-links a:hover{color:var(--pink-l)}
-  .n-cta{background:linear-gradient(135deg,var(--pink),#b91c6a) !important;
-    color:#fff !important;padding:.42rem 1.4rem;border-radius:50px;font-weight:700 !important;
-    box-shadow:0 4px 18px rgba(247,37,133,.4);transition:all .3s !important}
-  .n-cta:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(247,37,133,.6) !important}
-
-  /* ── HERO ─────────────────────────────────────────────── */
-  #hero{position:relative;height:100vh;display:flex;align-items:center;
-    justify-content:center;overflow:hidden}
-  #hero-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;will-change:transform}
-  /* Hero CSS blobs — GPU-composited transform-only animations, zero repaint cost */
-  .hero-blobs{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1}
-  .blob{position:absolute;border-radius:50%;will-change:transform}
-  .blob.b1{width:520px;height:520px;top:-15%;left:-8%;
-    background:radial-gradient(circle,rgba(247,37,133,.2),rgba(247,37,133,.04) 70%);
-    animation:blobFloat 9s ease-in-out infinite}
-  .blob.b2{width:420px;height:420px;bottom:-12%;right:-6%;
-    background:radial-gradient(circle,rgba(6,255,165,.15),rgba(6,255,165,.03) 70%);
-    animation:blobFloat 11s ease-in-out infinite 2.5s reverse}
-  .blob.b3{width:320px;height:320px;top:35%;left:42%;
-    background:radial-gradient(circle,rgba(255,214,10,.12),rgba(255,214,10,.02) 70%);
-    animation:blobFloat 7.5s ease-in-out infinite 5s}
-  @keyframes blobFloat{
-    0%,100%{transform:translate(0,0) scale(1)}
-    33%{transform:translate(28px,-18px) scale(1.04)}
-    66%{transform:translate(-18px,14px) scale(.97)}
-  }
-  #p-hero{position:absolute;inset:0;width:100%;height:100%}
-  .h-wrap{position:relative;z-index:10;text-align:center;max-width:900px;padding:0 2rem}
-  .h-badge{display:inline-flex;align-items:center;gap:.5rem;
-    background:rgba(247,37,133,.1);border:1px solid rgba(247,37,133,.28);
-    border-radius:50px;padding:.32rem 1.1rem;font-size:.7rem;font-weight:700;
-    letter-spacing:.12em;text-transform:uppercase;color:var(--pink-l);margin-bottom:1.5rem}
-  .dot{width:6px;height:6px;background:var(--pink-l);border-radius:50%;animation:blink 2s infinite}
-  @keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.65)}}
-  .h-title{font-family:'Space Grotesk',sans-serif;
-    font-size:clamp(2.6rem,6vw,5rem);font-weight:800;
-    line-height:1.06;letter-spacing:-.03em;margin-bottom:1.4rem}
-  .grad{background:linear-gradient(135deg,#ff85c1 0%,#06ffa5 50%,#ffd60a 100%);
-    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-  .h-sub{color:var(--muted);font-size:clamp(.95rem,1.8vw,1.1rem);line-height:1.72;
-    max-width:560px;margin:0 auto 1rem}
-  .h-typed{display:block;font-size:clamp(1rem,2vw,1.35rem);color:var(--neon);
-    font-weight:600;margin-bottom:2.4rem;min-height:2.2em}
-  .h-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
-  .btn-p{background:linear-gradient(135deg,var(--pink),#b91c6a);color:#fff;
-    padding:.85rem 2.4rem;border-radius:50px;border:none;font-size:.95rem;font-weight:800;
-    cursor:none;box-shadow:0 6px 24px rgba(247,37,133,.42);text-decoration:none;
-    display:inline-block;transition:all .3s;position:relative;overflow:hidden}
-  .btn-p::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,.1);opacity:0;transition:.3s}
-  .btn-p:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(247,37,133,.62)}
-  .btn-p:hover::after{opacity:1}
-  .btn-s{background:rgba(247,37,133,.06);color:var(--text);padding:.85rem 2.4rem;
-    border-radius:50px;border:1px solid rgba(247,37,133,.2);font-size:.95rem;font-weight:600;
-    cursor:none;text-decoration:none;display:inline-block;transition:all .3s}
-  .btn-s:hover{border-color:rgba(247,37,133,.48);background:rgba(247,37,133,.12);transform:translateY(-3px)}
-  .scroll-ind{position:absolute;bottom:1.8rem;left:50%;transform:translateX(-50%);
-    display:flex;flex-direction:column;align-items:center;gap:.5rem;
-    color:var(--muted);font-size:.67rem;letter-spacing:.14em;text-transform:uppercase}
-  .scroll-line{width:1px;height:52px;
-    background:linear-gradient(to bottom,transparent,var(--pink-l));
-    animation:sline 2.2s ease infinite}
-  @keyframes sline{
-    0%{opacity:0;transform:scaleY(0);transform-origin:top}
-    50%{opacity:1;transform:scaleY(1)}
-    100%{opacity:0;transform:scaleY(0);transform-origin:bottom}
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--bg-primary); }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, var(--accent-cyan), var(--accent-purple));
+    border-radius: 3px;
   }
 
-  /* ── MARQUEE ──────────────────────────────────────────── */
-  .mq-wrap{overflow:hidden;padding:.9rem 0;
-    border-top:1px solid var(--border);border-bottom:1px solid var(--border);
-    background:rgba(247,37,133,.04)}
-  .mq-track{display:flex;gap:2.5rem;animation:mq 30s linear infinite;width:max-content}
-  .mq-track:hover{animation-play-state:paused}
-  @keyframes mq{to{transform:translateX(-50%)}}
-  .mq-item{display:flex;align-items:center;gap:.55rem;white-space:nowrap;
-    font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:700;
-    letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-  .mq-item span{color:var(--pink);font-size:.9rem}
+  /* ══════════════════════════════════════════
+     TYPOGRAPHY UTILITIES
+  ══════════════════════════════════════════ */
+  .grad {
+    background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-purple-l) 50%, var(--accent-green) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .grad-warm {
+    background: linear-gradient(135deg, #f72585 0%, #7c3aed 50%, #00d4ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 
-  /* ── SECTION BASE ─────────────────────────────────────── */
-  .sec{padding:5.5rem 2rem;max-width:1200px;margin:0 auto}
-  .sec-lbl{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.16em;
-    text-transform:uppercase;color:var(--pink-l);margin-bottom:.75rem}
-  .sec-title{font-family:'Space Grotesk',sans-serif;
-    font-size:clamp(1.8rem,3.8vw,2.8rem);font-weight:800;
-    line-height:1.16;letter-spacing:-.025em;margin-bottom:.85rem}
-  .sec-sub{color:var(--muted);font-size:1rem;line-height:1.78;max-width:600px}
+  /* ══════════════════════════════════════════
+     GLASS CARD BASE
+  ══════════════════════════════════════════ */
+  .glass-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: var(--card-shadow);
+  }
 
-  /* ── INTEGRATIONS ─────────────────────────────────────── */
-  .int-head{text-align:center;margin-bottom:3rem}
-  .int-head .sec-sub{margin:0 auto}
-  .int-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(265px,1fr));gap:1.3rem}
-  .i-card{background:var(--card);border:1px solid var(--border);border-radius:18px;
-    padding:1.7rem;position:relative;overflow:hidden;
-    transition:border-color .3s,box-shadow .3s,transform .3s}
-  .i-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
-    background:linear-gradient(90deg,transparent,var(--pink-l),transparent);
-    opacity:0;transition:opacity .3s}
-  .i-card:hover{border-color:rgba(247,37,133,.42);box-shadow:var(--gp);transform:translateY(-5px)}
-  .i-card:hover::before{opacity:1}
-  .c-icon{width:50px;height:50px;border-radius:13px;display:flex;align-items:center;
-    justify-content:center;font-size:1.4rem;margin-bottom:1rem}
-  .ip{background:rgba(247,37,133,.16);border:1px solid rgba(247,37,133,.28)}
-  .in{background:rgba(6,255,165,.16);border:1px solid rgba(6,255,165,.28)}
-  .ig{background:rgba(255,214,10,.16);border:1px solid rgba(255,214,10,.28)}
-  .io{background:rgba(255,109,0,.16);border:1px solid rgba(255,109,0,.28)}
-  .ic{background:rgba(255,67,97,.16);border:1px solid rgba(255,67,97,.28)}
-  .im{background:rgba(255,133,193,.16);border:1px solid rgba(255,133,193,.28)}
-  .c-title{font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;margin-bottom:.4rem}
-  .c-desc{color:var(--muted);font-size:.85rem;line-height:1.65;margin-bottom:1rem}
-  .c-tags{display:flex;flex-wrap:wrap;gap:.3rem}
-  .tag{font-size:.66rem;font-weight:600;letter-spacing:.04em;padding:.16rem .6rem;
-    border-radius:50px;background:rgba(255,255,255,.04);
-    border:1px solid rgba(255,255,255,.1);color:var(--muted)}
-  .tp{background:rgba(247,37,133,.12);border-color:rgba(247,37,133,.28);color:var(--pink-l)}
-  .tn{background:rgba(6,255,165,.12);border-color:rgba(6,255,165,.28);color:var(--neon)}
-  .tg{background:rgba(255,214,10,.12);border-color:rgba(255,214,10,.28);color:var(--gold)}
-  .to2{background:rgba(255,109,0,.12);border-color:rgba(255,109,0,.28);color:var(--orange)}
+  /* ══════════════════════════════════════════
+     SECTION SHARED
+  ══════════════════════════════════════════ */
+  .sec { padding: var(--sec-pad); position: relative; z-index: 1; }
+  .sec-inner { max-width: var(--max-w); margin: 0 auto; }
 
-  /* ── CARD LIVE DEMOS ─────────────────────────────────── */
-  .c-demo{height:86px;margin-bottom:1rem;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;border-radius:10px;background:rgba(255,255,255,.025)}
+  .sec-eyebrow {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-size: 0.68rem; font-weight: 700;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--accent-cyan); margin-bottom: 1rem;
+  }
+  .sec-eyebrow::before {
+    content: '';
+    width: 22px; height: 1px;
+    background: var(--accent-cyan); opacity: 0.65; flex-shrink: 0;
+  }
 
-  /* 1 Three.js — CSS 3D rotating cube */
-  .cd-cube-scene{width:56px;height:56px;perspective:160px}
-  .cd-cube{width:100%;height:100%;position:relative;transform-style:preserve-3d;animation:cdCubeSpin 5s linear infinite}
-  @keyframes cdCubeSpin{to{transform:rotateX(360deg) rotateY(310deg)}}
-  .cd-face{position:absolute;width:56px;height:56px;border:1px solid rgba(247,37,133,.65);background:rgba(247,37,133,.06);box-shadow:inset 0 0 10px rgba(247,37,133,.12)}
-  .cd-face.cf{transform:translateZ(28px)}.cd-face.cb{transform:rotateY(180deg) translateZ(28px)}
-  .cd-face.cr{transform:rotateY(90deg) translateZ(28px)}.cd-face.cl{transform:rotateY(-90deg) translateZ(28px)}
-  .cd-face.ct{transform:rotateX(90deg) translateZ(28px)}.cd-face.cbo{transform:rotateX(-90deg) translateZ(28px)}
+  .sec-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4.5vw, 3.2rem);
+    font-weight: 800; line-height: 1.08;
+    letter-spacing: -0.04em; color: var(--text-primary);
+    margin-bottom: 1rem;
+  }
+  .sec-sub {
+    font-size: clamp(0.95rem, 1.7vw, 1.08rem);
+    color: var(--text-secondary);
+    line-height: 1.82; max-width: 560px;
+  }
+  .sec-head-c { text-align: center; margin-bottom: 4rem; }
+  .sec-head-c .sec-sub { margin: 0 auto; }
 
-  /* 2 GSAP — staggered timeline bars */
-  .cd-gsap{display:flex;flex-direction:column;gap:7px;width:130px}
-  .cd-gbar{height:5px;border-radius:4px;width:0%;animation:cdGBar 2.6s ease-in-out infinite}
-  .cd-gbar:nth-child(1){background:var(--pink);box-shadow:0 0 6px var(--pink);animation-delay:0s}
-  .cd-gbar:nth-child(2){background:var(--neon);box-shadow:0 0 6px var(--neon);animation-delay:.22s}
-  .cd-gbar:nth-child(3){background:var(--gold);box-shadow:0 0 6px var(--gold);animation-delay:.44s}
-  .cd-gbar:nth-child(4){background:var(--orange);box-shadow:0 0 6px var(--orange);animation-delay:.66s}
-  @keyframes cdGBar{0%,4%{width:0%}55%{width:100%}85%,100%{width:0%}}
+  /* ══════════════════════════════════════════
+     SCROLL PROGRESS
+  ══════════════════════════════════════════ */
+  #scroll-progress {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 2px; z-index: 10001; pointer-events: none;
+    background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple), var(--accent-green));
+    transform-origin: left; transform: scaleX(0);
+    box-shadow: 0 0 10px rgba(0,212,255,0.6);
+  }
 
-  /* 3 Particles.js — JS-generated floating dots */
-  .cd-pts{position:relative;width:130px;height:80px}
-  .cd-pt{position:absolute;border-radius:50%;animation:cdDotFloat ease-in-out infinite alternate}
-  @keyframes cdDotFloat{0%{transform:translate(0,0)}100%{transform:translate(var(--tx),var(--ty))}}
+  /* ══════════════════════════════════════════
+     REVEAL CLASSES (GSAP-animated)
+  ══════════════════════════════════════════ */
+  .rv     { opacity: 0; transform: translateY(38px); }
+  .rv-l   { opacity: 0; transform: translateX(-42px); }
+  .rv-r   { opacity: 0; transform: translateX(42px); }
+  .rv-s   { opacity: 0; transform: scale(0.88); }
+  .rv-b   { opacity: 0; filter: blur(14px); transform: translateY(22px); }
 
-  /* 4 Chart.js — mini animated bars */
-  .cd-chart-mini{display:flex;align-items:flex-end;gap:6px;height:58px}
-  .cd-cbar{width:15px;border-radius:2px 2px 0 0;transform-origin:bottom;animation:cdCBar 2.1s ease-in-out infinite}
-  .cd-cbar:nth-child(1){background:var(--gold);box-shadow:0 -3px 8px rgba(255,214,10,.45);animation-delay:0s}
-  .cd-cbar:nth-child(2){background:var(--orange);box-shadow:0 -3px 8px rgba(255,109,0,.4);animation-delay:.18s}
-  .cd-cbar:nth-child(3){background:var(--pink);box-shadow:0 -3px 8px rgba(247,37,133,.45);animation-delay:.36s}
-  .cd-cbar:nth-child(4){background:var(--neon);box-shadow:0 -3px 8px rgba(6,255,165,.4);animation-delay:.54s}
-  .cd-cbar:nth-child(5){background:var(--gold);box-shadow:0 -3px 8px rgba(255,214,10,.38);animation-delay:.72s}
-  @keyframes cdCBar{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.38)}}
+  /* ══════════════════════════════════════════
+     DIVIDER
+  ══════════════════════════════════════════ */
+  .divider {
+    height: 1px; margin: 0 2rem;
+    background: linear-gradient(90deg,
+      transparent,
+      rgba(0,212,255,0.12) 25%,
+      rgba(124,58,237,0.12) 75%,
+      transparent);
+    position: relative; z-index: 1;
+  }
 
-  /* 5 Typed.js — live typing text */
-  .cd-typed-demo{font-family:'Space Grotesk',sans-serif;font-size:.88rem;font-weight:700;color:var(--neon);text-align:center}
-  .cd-cursor-blink{display:inline-block;width:2px;height:1em;background:var(--neon);margin-left:1px;vertical-align:text-bottom;animation:cdBlink .85s step-end infinite}
-  @keyframes cdBlink{0%,100%{opacity:1}50%{opacity:0}}
+  /* ══════════════════════════════════════════
+     BUTTONS
+  ══════════════════════════════════════════ */
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.85rem 2.2rem; border-radius: 50px;
+    font-family: var(--font-sans); font-size: 0.92rem; font-weight: 700;
+    letter-spacing: -0.01em; text-decoration: none;
+    cursor: pointer; border: none; position: relative; overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.22,0.61,0.36,1),
+                box-shadow 0.3s;
+  }
+  .btn::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.18), transparent 55%);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .btn:hover { transform: translateY(-3px); }
+  .btn:hover::before { opacity: 1; }
 
-  /* 6 Swiper.js — sliding items */
-  .cd-swiper-demo{width:130px;height:56px;overflow:hidden;border-radius:7px;border:1px solid rgba(6,255,165,.2);position:relative}
-  .cd-swiper-track{display:flex;flex-direction:column;animation:cdSwipeUp 4.5s ease-in-out infinite}
-  .cd-sslide{height:56px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:600;letter-spacing:.04em;gap:.4rem;color:var(--text)}
-  @keyframes cdSwipeUp{0%,18%{transform:translateY(0)}33%,51%{transform:translateY(-56px)}66%,84%{transform:translateY(-112px)}100%{transform:translateY(-168px)}}
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+    color: #fff;
+    box-shadow: 0 6px 28px rgba(0,212,255,0.38), 0 1px 0 rgba(255,255,255,0.15) inset;
+  }
+  .btn-primary:hover {
+    box-shadow: 0 12px 40px rgba(0,212,255,0.5), 0 1px 0 rgba(255,255,255,0.15) inset;
+  }
 
-  /* 7 AOS — reveal-in elements */
-  .cd-aos-demo{display:flex;flex-direction:column;gap:7px;width:130px}
-  .cd-aos-el{height:9px;border-radius:4px;transform:translateX(-20px);opacity:0;animation:cdAosIn 3s ease-out infinite}
-  .cd-aos-el:nth-child(1){background:rgba(247,37,133,.65);width:55%;animation-delay:0s}
-  .cd-aos-el:nth-child(2){background:rgba(6,255,165,.65);width:85%;animation-delay:.28s}
-  .cd-aos-el:nth-child(3){background:rgba(255,214,10,.65);width:68%;animation-delay:.56s}
-  .cd-aos-el:nth-child(4){background:rgba(247,37,133,.45);width:42%;animation-delay:.84s}
-  @keyframes cdAosIn{0%{transform:translateX(-20px);opacity:0}20%,75%{transform:translateX(0);opacity:1}90%,100%{transform:translateX(-20px);opacity:0}}
+  .btn-ghost {
+    background: var(--glass);
+    border: 1px solid var(--glass-border-s);
+    color: var(--text-primary);
+    backdrop-filter: blur(10px);
+  }
+  .btn-ghost:hover {
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 24px rgba(0,212,255,0.2);
+    background: rgba(0,212,255,0.08);
+  }
 
-  /* 8 Vanilla Tilt — rocking card */
-  .cd-tilt-preview{perspective:220px;width:88px;height:58px}
-  .cd-tilt-card{width:100%;height:100%;border-radius:8px;border:1px solid rgba(6,255,165,.45);background:rgba(6,255,165,.06);transform-style:preserve-3d;animation:cdTiltRock 3s ease-in-out infinite;position:relative;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:700;color:var(--neon);letter-spacing:.05em}
-  .cd-tilt-shine{position:absolute;inset:0;border-radius:8px;background:linear-gradient(135deg,rgba(255,255,255,.18),transparent 50%,rgba(255,255,255,.04));animation:cdTiltShine 3s ease-in-out infinite;pointer-events:none}
-  @keyframes cdTiltRock{0%,100%{transform:rotateX(-14deg) rotateY(-12deg)}50%{transform:rotateX(14deg) rotateY(12deg)}}
-  @keyframes cdTiltShine{0%,100%{opacity:1}50%{opacity:.2}}
+  /* ══════════════════════════════════════════
+     PRELOADER
+  ══════════════════════════════════════════ */
+  #loader {
+    position: fixed; inset: 0; z-index: 99999;
+    background: var(--bg-primary);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    overflow: hidden;
+  }
 
-  /* 9 Lenis — smooth scrolling page mockup */
-  .cd-lenis-demo{width:108px;height:66px;border-radius:8px;border:1px solid rgba(255,214,10,.22);background:rgba(255,214,10,.04);display:flex;overflow:hidden}
-  .cd-lenis-lines{flex:1;padding:6px 8px;display:flex;flex-direction:column;gap:5px;animation:cdLenisScroll 2.8s cubic-bezier(.16,1,.3,1) infinite}
-  .cd-lline{height:4px;border-radius:2px;background:rgba(255,214,10,.35)}
-  .cd-lline:nth-child(2){width:75%}.cd-lline:nth-child(3){width:90%}.cd-lline:nth-child(4){width:60%}.cd-lline:nth-child(5){width:82%}.cd-lline:nth-child(6){width:70%}.cd-lline:nth-child(7){width:88%}
-  @keyframes cdLenisScroll{0%{transform:translateY(0)}50%{transform:translateY(-28px)}100%{transform:translateY(0)}}
-  .cd-lenis-bar{width:8px;background:rgba(255,255,255,.04);position:relative;flex-shrink:0}
-  .cd-lenis-thumb{width:4px;height:20px;border-radius:2px;background:var(--gold);box-shadow:0 0 6px var(--gold);position:absolute;left:50%;margin-left:-2px;animation:cdLenisThumb 2.8s cubic-bezier(.16,1,.3,1) infinite}
-  @keyframes cdLenisThumb{0%{top:4px}50%{top:calc(100% - 24px)}100%{top:4px}}
+  /* Subtle scanline atmosphere */
+  #loader::before {
+    content: '';
+    position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 2px,
+      rgba(0,212,255,0.014) 2px, rgba(0,212,255,0.014) 4px
+    );
+  }
 
-  /* ── DIVIDER ──────────────────────────────────────────── */
-  .divider{height:1px;background:linear-gradient(90deg,transparent,rgba(247,37,133,.25),rgba(6,255,165,.22),transparent)}
+  /* Background radial glow */
+  #loader::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 900px; height: 500px;
+    background: radial-gradient(ellipse, rgba(0,212,255,0.05) 0%, transparent 65%);
+    pointer-events: none; z-index: 0;
+  }
 
-  /* ── LOTTIE SECTION ───────────────────────────────────── */
-  .lottie-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
-    gap:1.6rem;margin-top:2.8rem}
-  .lottie-card{background:var(--card);border:1px solid var(--border);border-radius:20px;
-    padding:2rem;text-align:center;transition:border-color .3s,box-shadow .3s,transform .3s;
-    position:relative;overflow:hidden}
-  .lottie-card::before{content:'';position:absolute;inset:0;
-    background:linear-gradient(135deg,rgba(247,37,133,.04),rgba(6,255,165,.04));
-    opacity:0;transition:opacity .3s}
-  .lottie-card:hover{border-color:rgba(6,255,165,.32);box-shadow:var(--gn);transform:translateY(-4px)}
-  .lottie-card:hover::before{opacity:1}
-  /* Lottie animation containers */
-  .lottie-anim{width:150px;height:150px;margin:0 auto 1rem;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
-  .la-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transition:opacity .4s}
-  .la-lt{position:absolute;inset:0;opacity:0;transition:opacity .4s;pointer-events:none}
-  /* Card 1 — Orbital rings */
-  .la-orb{position:relative;width:116px;height:116px}
-  .la-orb-core{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:24px;height:24px;border-radius:50%;background:radial-gradient(circle,var(--pink-l),var(--pink));box-shadow:0 0 18px var(--pink),0 0 36px rgba(247,37,133,.3);animation:orbCore 2s ease-in-out infinite}
-  @keyframes orbCore{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.3)}}
-  .la-ring{position:absolute;top:50%;left:50%;border-radius:50%;border:1.5px solid}
-  .la-ring.r1{width:82px;height:82px;margin:-41px;border-color:rgba(6,255,165,.62);animation:laSpin 3.4s linear infinite}
-  .la-ring.r2{width:106px;height:106px;margin:-53px;border-color:rgba(255,214,10,.44);animation:laSpinR 5s linear infinite}
-  .la-ring.r3{width:62px;height:62px;margin:-31px;border-color:rgba(247,37,133,.4);animation:laSpin 2.3s linear infinite}
-  @keyframes laSpin{to{transform:rotate(360deg)}}
-  @keyframes laSpinR{to{transform:rotate(-360deg)}}
-  .la-planet{position:absolute;top:-4px;left:50%;margin-left:-4px;border-radius:50%}
-  .la-planet.p1{width:8px;height:8px;background:var(--neon);box-shadow:0 0 10px var(--neon)}
-  .la-planet.p2{width:6px;height:6px;background:var(--gold);box-shadow:0 0 8px var(--gold)}
-  .la-planet.p3{width:7px;height:7px;background:var(--pink-l);box-shadow:0 0 9px var(--pink-l)}
-  /* Card 2 — Animated chart bars */
-  .la-chart-wrap{display:flex;align-items:flex-end;gap:8px;width:110px;height:88px}
-  .la-bar{flex:1;border-radius:3px 3px 0 0;transform-origin:bottom;animation:laBarPop 2s ease-in-out infinite}
-  .la-bar:nth-child(1){height:70%;background:var(--pink);box-shadow:0 -3px 10px rgba(247,37,133,.5);animation-delay:0s}
-  .la-bar:nth-child(2){height:90%;background:var(--neon);box-shadow:0 -3px 10px rgba(6,255,165,.5);animation-delay:.22s}
-  .la-bar:nth-child(3){height:55%;background:var(--gold);box-shadow:0 -3px 10px rgba(255,214,10,.5);animation-delay:.44s}
-  .la-bar:nth-child(4){height:80%;background:rgba(247,37,133,.72);box-shadow:0 -3px 8px rgba(247,37,133,.4);animation-delay:.66s}
-  .la-bar:nth-child(5){height:65%;background:rgba(6,255,165,.72);box-shadow:0 -3px 8px rgba(6,255,165,.4);animation-delay:.88s}
-  @keyframes laBarPop{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.48)}}
-  /* Card 3 — Pulse rings */
-  .la-pulse-wrap{position:relative;width:104px;height:104px;display:flex;align-items:center;justify-content:center}
-  .la-pring{position:absolute;border-radius:50%;animation:laPulsRing 2.4s ease-out infinite}
-  .la-pring.pr1{border:1.5px solid rgba(6,255,165,.75);animation-delay:0s}
-  .la-pring.pr2{border:1.5px solid rgba(247,37,133,.55);animation-delay:.8s}
-  .la-pring.pr3{border:1.5px solid rgba(255,214,10,.45);animation-delay:1.6s}
-  @keyframes laPulsRing{0%{width:18px;height:18px;opacity:1}100%{width:92px;height:92px;opacity:0}}
-  .la-ico{font-size:2.1rem;position:relative;z-index:1;
-    background:linear-gradient(135deg,var(--neon),var(--pink));
-    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-    animation:laIcoSpin 4s ease-in-out infinite;
-    filter:drop-shadow(0 0 10px var(--neon))}
-  @keyframes laIcoSpin{0%,100%{transform:rotate(0) scale(1)}50%{transform:rotate(180deg) scale(1.2)}}
-  .lottie-title{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;font-weight:700;margin-bottom:.45rem}
-  .lottie-desc{color:var(--muted);font-size:.85rem;line-height:1.62}
-  .lottie-badge{display:inline-block;margin-top:.75rem;font-size:.66rem;font-weight:700;
-    letter-spacing:.08em;text-transform:uppercase;padding:.18rem .75rem;border-radius:50px;
-    background:rgba(6,255,165,.1);border:1px solid rgba(6,255,165,.24);color:var(--neon)}
+  /* HUD corner brackets */
+  .ldr-corner {
+    position: absolute; width: 26px; height: 26px;
+    z-index: 3; opacity: 0.35;
+  }
+  .ldr-corner.tl { top: 28px; left: 28px;
+    border-top: 1px solid var(--accent-cyan); border-left: 1px solid var(--accent-cyan); }
+  .ldr-corner.tr { top: 28px; right: 28px;
+    border-top: 1px solid var(--accent-cyan); border-right: 1px solid var(--accent-cyan); }
+  .ldr-corner.bl { bottom: 28px; left: 28px;
+    border-bottom: 1px solid var(--accent-cyan); border-left: 1px solid var(--accent-cyan); }
+  .ldr-corner.br { bottom: 28px; right: 28px;
+    border-bottom: 1px solid var(--accent-cyan); border-right: 1px solid var(--accent-cyan); }
 
-  /* floating animation for lottie cards */
-  .float-a{animation:floatA 4s ease-in-out infinite}
-  .float-b{animation:floatA 5s ease-in-out infinite .7s}
-  .float-c{animation:floatA 4.5s ease-in-out infinite 1.4s}
-  @keyframes floatA{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+  /* Logo + tagline */
+  .ldr-logo {
+    position: relative; z-index: 2;
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 5.5vw, 3.6rem);
+    font-weight: 800; letter-spacing: -0.045em;
+    background: linear-gradient(135deg, #ffffff 0%, rgba(0,212,255,0.92) 55%, rgba(124,58,237,0.85) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 0.35rem;
+    opacity: 0; transform: translateY(10px);
+  }
+  .ldr-tagline {
+    position: relative; z-index: 2;
+    font-family: var(--font-mono);
+    font-size: 0.7rem; font-weight: 400;
+    letter-spacing: 0.28em; text-transform: uppercase;
+    color: rgba(0,212,255,0.45);
+    margin-bottom: 2.8rem;
+    opacity: 0;
+  }
 
-  /* ── 3D DEMO ──────────────────────────────────────────── */
-  .demo-wrap{padding:5.5rem 2rem;
-    background:linear-gradient(180deg,transparent,rgba(16,8,24,.4),transparent)}
-  .demo-inner{max-width:1200px;margin:0 auto}
-  .demo-layout{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:center}
-  #three-demo{height:400px;border-radius:20px;overflow:hidden;
-    border:1px solid var(--border);background:var(--bg2);will-change:transform}
-  .demo-ctrls{display:flex;gap:.5rem;margin-bottom:.75rem;flex-wrap:wrap;align-items:center}
-  .demo-ctrls-label{font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-right:.3rem;white-space:nowrap}
-  .d-btn{padding:.44rem 1rem;border-radius:8px;cursor:none;
-    border:1px solid var(--border);background:rgba(255,255,255,.04);
-    color:var(--muted);font-size:.8rem;font-weight:600;transition:all .22s;white-space:nowrap}
-  .d-btn:hover,.d-btn.active{border-color:var(--pink);background:rgba(247,37,133,.14);color:var(--pink-l)}
-  /* Car button: gold */
-  .d-btn-car{border-color:rgba(255,214,10,.28) !important;color:var(--gold) !important;background:rgba(255,214,10,.06) !important;font-size:.85rem !important;padding:.5rem 1.2rem !important}
-  .d-btn-car:hover,.d-btn-car.active{border-color:var(--gold) !important;background:rgba(255,214,10,.18) !important;box-shadow:0 0 14px rgba(255,214,10,.3) !important}
-  /* Robot button: neon */
-  .d-btn-robot{border-color:rgba(6,255,165,.28) !important;color:var(--neon) !important;background:rgba(6,255,165,.06) !important;font-size:.85rem !important;padding:.5rem 1.2rem !important}
-  .d-btn-robot:hover,.d-btn-robot.active{border-color:var(--neon) !important;background:rgba(6,255,165,.18) !important;box-shadow:0 0 14px rgba(6,255,165,.3) !important}
-  .f-list{display:flex;flex-direction:column;gap:1rem;margin-top:1.8rem}
-  .f-item{display:flex;gap:.85rem;align-items:flex-start}
-  .f-ico{width:32px;height:32px;border-radius:8px;flex-shrink:0;
-    background:rgba(247,37,133,.16);border:1px solid rgba(247,37,133,.28);
-    display:flex;align-items:center;justify-content:center;font-size:.9rem}
-  .f-txt h4{font-weight:600;font-size:.88rem;margin-bottom:.15rem}
-  .f-txt p{color:var(--muted);font-size:.8rem;line-height:1.55}
-  #drive-hint{margin-bottom:.6rem;font-size:.78rem;color:var(--neon);display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;opacity:.85}
-  kbd{background:rgba(247,37,133,.1);border:1px solid rgba(247,37,133,.28);border-radius:4px;padding:.12rem .45rem;font-family:'Space Grotesk',sans-serif;font-size:.72rem;color:var(--pink-l);letter-spacing:.04em}
+  /* ── Car scene ── */
+  .ldr-scene {
+    position: relative; z-index: 2;
+    width: 100vw; height: 110px;
+    display: flex; align-items: center;
+    overflow: hidden;
+    margin-bottom: 2.2rem;
+  }
 
-  /* ── STATS ────────────────────────────────────────────── */
-  .stats-bg{padding:4.5rem 2rem;
-    background:linear-gradient(135deg,rgba(247,37,133,.05),rgba(6,255,165,.05));
-    border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-  .stats-inner{max-width:1200px;margin:0 auto}
-  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;text-align:center}
-  .s-num{font-family:'Space Grotesk',sans-serif;font-size:3rem;font-weight:800;line-height:1;margin-bottom:.35rem}
-  .sp{color:var(--pink-l)}.sn{color:var(--neon)}.sg{color:var(--gold)}.so{color:var(--orange)}
-  .s-lbl{color:var(--muted);font-size:.85rem;font-weight:500}
+  /* Ground line */
+  .ldr-ground {
+    position: absolute; bottom: 14px; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+      transparent,
+      rgba(0,212,255,0.06) 10%,
+      rgba(0,212,255,0.22) 50%,
+      rgba(0,212,255,0.06) 90%,
+      transparent);
+  }
 
-  /* ── CHARTS ───────────────────────────────────────────── */
-  .charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.6rem;margin-top:2.8rem}
-  .ch-card{background:var(--card);border:1px solid var(--border);border-radius:18px;
-    padding:1.7rem;transition:border-color .3s,box-shadow .3s}
-  .ch-card:hover{border-color:rgba(255,214,10,.3);box-shadow:var(--gg)}
-  .ch-card h3{font-family:'Space Grotesk',sans-serif;font-size:.76rem;font-weight:700;
-    text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:1.3rem}
+  /* Speed lines (CSS only animation) */
+  .ldr-speed { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  .sl {
+    position: absolute; left: -60%; height: 1px; border-radius: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,212,255,0.3), transparent);
+    animation: slAnim linear infinite;
+  }
+  .sl:nth-child(1) { top: 22%; width: 32%; animation-duration: 1.55s; animation-delay: 0s; }
+  .sl:nth-child(2) { top: 40%; width: 52%; animation-duration: 1.80s; animation-delay: 0.28s; }
+  .sl:nth-child(3) { top: 58%; width: 38%; animation-duration: 1.65s; animation-delay: 0.12s; }
+  .sl:nth-child(4) { top: 73%; width: 28%; animation-duration: 2.00s; animation-delay: 0.44s; }
+  @keyframes slAnim {
+    0%   { transform: translateX(0); opacity: 0; }
+    8%   { opacity: 1; }
+    100% { transform: translateX(210vw); opacity: 0; }
+  }
 
-  /* ── WORKFLOW ─────────────────────────────────────────── */
-  .wf-steps{display:grid;grid-template-columns:repeat(5,1fr);position:relative;margin-top:3.5rem}
-  .wf-steps::after{content:'';position:absolute;top:27px;left:10%;right:10%;height:1px;
-    background:linear-gradient(90deg,var(--pink),var(--orange),var(--gold),var(--neon));z-index:0}
-  .wf-step{text-align:center;padding:0 .7rem;position:relative}
-  .wf-num{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-    font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:800;color:#fff;
-    margin:0 auto 1rem;position:relative;z-index:1}
-  .w1{background:linear-gradient(135deg,var(--pink),#b91c6a);  box-shadow:0 5px 20px rgba(247,37,133,.48)}
-  .w2{background:linear-gradient(135deg,#b91c6a,var(--coral)); box-shadow:0 5px 20px rgba(185,28,106,.38)}
-  .w3{background:linear-gradient(135deg,var(--coral),var(--orange));box-shadow:0 5px 20px rgba(255,67,97,.38)}
-  .w4{background:linear-gradient(135deg,var(--orange),var(--gold)); box-shadow:0 5px 20px rgba(255,109,0,.42)}
-  .w5{background:linear-gradient(135deg,var(--gold),var(--neon)); box-shadow:0 5px 20px rgba(255,214,10,.38)}
-  .wf-step h4{font-family:'Space Grotesk',sans-serif;font-size:.85rem;font-weight:700;margin-bottom:.35rem}
-  .wf-step p{color:var(--muted);font-size:.76rem;line-height:1.55}
+  /* ── Car wrapper (GSAP translateX) ── */
+  #ldr-car {
+    position: absolute; top: 50%;
+    transform: translateY(-50%);
+    display: flex; align-items: center;
+    will-change: transform;
+  }
 
-  /* ── SWIPER ───────────────────────────────────────────── */
-  .sw-wrap{padding:5.5rem 3rem;max-width:100%;overflow:hidden}
-  .sw-inner{max-width:1200px;margin:0 auto}
-  .sw-head{text-align:center;margin-bottom:2.2rem}
-  .sw-head .sec-sub{margin:0 auto}
-  .swiper{padding:1rem 0 3rem}
-  .sw-card{background:var(--card);border:1px solid var(--border);border-radius:18px;
-    padding:2rem;height:100%;transition:border-color .3s,box-shadow .3s}
-  .sw-card:hover{border-color:rgba(6,255,165,.32);box-shadow:var(--gn)}
-  .sw-stars{color:var(--gold);margin-bottom:.9rem;font-size:.9rem;letter-spacing:2px}
-  .sw-quote{font-size:.975rem;line-height:1.82;color:var(--text);margin-bottom:1.6rem}
-  .sw-auth{display:flex;align-items:center;gap:.85rem}
-  .sw-av{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;
-    justify-content:center;font-size:1rem;font-weight:700;font-family:'Space Grotesk',sans-serif;flex-shrink:0}
-  .sw-name{font-weight:600;font-size:.9rem}
-  .sw-role{color:var(--muted);font-size:.76rem}
-  .swiper-pagination-bullet{background:var(--pink) !important;opacity:.32}
-  .swiper-pagination-bullet-active{opacity:1 !important;width:20px !important;border-radius:4px !important}
+  /* Light trail behind car */
+  .ldr-trail {
+    position: absolute;
+    right: calc(100% - 25px);
+    top: 50%; transform: translateY(-50%);
+    width: 380px; height: 55px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(0,212,255,0.02) 25%,
+      rgba(0,212,255,0.18) 60%,
+      rgba(0,212,255,0.55) 85%,
+      rgba(0,212,255,0.65) 100%);
+    filter: blur(7px);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .ldr-trail::after {
+    content: '';
+    position: absolute; right: 0; top: 50%;
+    transform: translateY(-50%);
+    width: 90px; height: 5px;
+    background: linear-gradient(90deg, transparent, #00d4ff);
+    border-radius: 3px; filter: blur(1.5px);
+  }
 
-  /* ── FOOTER ───────────────────────────────────────────── */
-  footer{border-top:1px solid var(--border);padding:2.8rem 2rem;text-align:center}
-  .ft-logo{font-family:'Space Grotesk',sans-serif;font-size:1.35rem;font-weight:800;
-    background:linear-gradient(135deg,var(--pink-l),var(--neon));
-    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.75rem}
-  .ft-txt{color:var(--muted);font-size:.85rem;margin-bottom:1.3rem}
-  .ft-tags{display:flex;justify-content:center;flex-wrap:wrap;gap:.45rem;margin-bottom:1.8rem}
-  .ft-tag{font-size:.7rem;font-weight:600;padding:.25rem .75rem;border-radius:5px;
-    background:rgba(247,37,133,.05);border:1px solid var(--border);color:var(--muted)}
-  .ft-copy{color:rgba(160,112,144,.35);font-size:.75rem}
+  /* Headlight beam forward */
+  .ldr-beam {
+    position: absolute;
+    left: calc(100% - 8px); top: 50%;
+    transform: translateY(-50%);
+    width: 180px; height: 38px;
+    background: linear-gradient(90deg,
+      rgba(255,255,255,0.5) 0%,
+      rgba(0,212,255,0.22) 35%,
+      transparent 100%);
+    filter: blur(9px);
+    clip-path: polygon(0 25%, 100% 0%, 100% 100%, 0 75%);
+    pointer-events: none;
+  }
 
-  /* ── RESPONSIVE ───────────────────────────────────────── */
-  @media(max-width:900px){
-    .demo-layout,.charts-grid{grid-template-columns:1fr}
-    .wf-steps{grid-template-columns:1fr;gap:1.8rem}
-    .wf-steps::after{display:none}
-    .stats-grid{grid-template-columns:repeat(2,1fr)}
-    .n-links{display:none}
+  /* Car SVG glow */
+  #ldr-car svg {
+    filter: drop-shadow(0 0 7px rgba(0,212,255,0.65))
+            drop-shadow(0 0 18px rgba(0,212,255,0.2));
+  }
+
+  /* ── Progress section ── */
+  .ldr-progress {
+    position: relative; z-index: 2;
+    width: min(440px, 82vw);
+    opacity: 0;
+  }
+  .ldr-bar-track {
+    width: 100%; height: 2px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 2px; position: relative;
+    margin-bottom: 0.75rem; overflow: visible;
+  }
+  .ldr-bar-fill {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple), var(--accent-green));
+    border-radius: 2px; position: relative;
+    box-shadow: 0 0 10px rgba(0,212,255,0.55);
+  }
+  /* Glowing tip on bar */
+  .ldr-bar-fill::after {
+    content: '';
+    position: absolute; right: -5px; top: 50%;
+    transform: translateY(-50%);
+    width: 11px; height: 11px; border-radius: 50%;
+    background: radial-gradient(circle, #fff 0%, var(--accent-cyan) 55%, transparent 80%);
+    filter: blur(1px);
+    box-shadow: 0 0 10px rgba(0,212,255,0.9), 0 0 22px rgba(0,212,255,0.4);
+  }
+  .ldr-bar-info {
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .ldr-text {
+    font-family: var(--font-mono);
+    font-size: 0.7rem; color: var(--text-secondary);
+    letter-spacing: 0.06em;
+  }
+  .ldr-pct {
+    font-family: var(--font-mono);
+    font-size: 0.7rem; font-weight: 600;
+    color: var(--accent-cyan); letter-spacing: 0.12em;
+  }
+
+  /* ── Exit curtain ── */
+  #ldr-curtain {
+    position: fixed; inset: 0; z-index: 99998;
+    background: var(--bg-primary);
+    transform: translateY(100%);
+    pointer-events: none;
   }
   </style>
 </head>
+
 <body>
 
-  <!-- Scroll progress -->
-  <div id="prog"></div>
+  <!-- Scroll progress bar -->
+  <div id="scroll-progress" aria-hidden="true"></div>
 
-  <!-- PRELOADER: spinning rings -->
-  <div id="preloader">
-    <div class="pre-body">
-      <div class="pre-rings">
-        <div class="pre-ring pr1"></div>
-        <div class="pre-ring pr2"></div>
-        <div class="pre-ring pr3"></div>
-        <div class="pre-dot"></div>
-      </div>
-      <div class="pre-logo">InteractX</div>
-      <div class="pre-bar"><div class="pre-fill" id="pre-fill"></div></div>
-      <div id="pre-num">0%</div>
-    </div>
-  </div>
-  <!-- Curtain halves (start hidden, then slide in from edges to cover, then page revealed underneath) -->
-  <div id="pre-top" style="transform:translateY(-100%)"></div>
-  <div id="pre-bot" style="transform:translateY(100%)"></div>
+  <!-- ══════════════════════════════════════
+       PRELOADER
+  ══════════════════════════════════════ -->
+  <div id="loader" role="status" aria-label="Loading InteractX">
+    <div class="ldr-corner tl" aria-hidden="true"></div>
+    <div class="ldr-corner tr" aria-hidden="true"></div>
+    <div class="ldr-corner bl" aria-hidden="true"></div>
+    <div class="ldr-corner br" aria-hidden="true"></div>
 
-  <!-- Cursor -->
-  <div id="cur"></div><div id="cur-ring"></div>
+    <div class="ldr-logo">InteractX</div>
+    <div class="ldr-tagline">Frontend. Reimagined. · v3.0</div>
 
-  <!-- NAV -->
-  <nav id="nav">
-    <div class="n-logo">InteractX</div>
-    <ul class="n-links">
-      <li><a href="#integrations">Integrations</a></li>
-      <li><a href="#lottie-sec">Lottie</a></li>
-      <li><a href="#demo-3d">3D Demo</a></li>
-      <li><a href="#charts">Charts</a></li>
-      <li><a href="#workflow">Workflow</a></li>
-      <li><a href="#showcase" class="n-cta">Get Started</a></li>
-    </ul>
-  </nav>
+    <!-- Car driving scene -->
+    <div class="ldr-scene">
+      <div class="ldr-speed" aria-hidden="true">
+        <div class="sl"></div><div class="sl"></div>
+        <div class="sl"></div><div class="sl"></div>
+      </div>
+      <div class="ldr-ground"></div>
 
-  <!-- HERO -->
-  <section id="hero">
-    <canvas id="hero-canvas"></canvas>
-    <div class="hero-blobs"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
-    <div id="p-hero"></div>
-    <div class="h-wrap" id="h-wrap">
-      <div class="h-badge"><span class="dot"></span>Frontend Integration Framework v2.0</div>
-      <h1 class="h-title">Build <span class="grad">Interactive</span><br>Web Experiences</h1>
-      <p class="h-sub">9 powerful third-party libraries. One GitHub workflow. Infinite possibilities for immersive, animated web experiences.</p>
-      <span id="h-typed" class="h-typed"></span>
-      <div class="h-btns">
-        <a href="#integrations" class="btn-p mag-btn">Explore the Stack</a>
-        <a href="#demo-3d" class="btn-s mag-btn">See 3D Live →</a>
-      </div>
-    </div>
-    <div class="scroll-ind"><span>Scroll</span><div class="scroll-line"></div></div>
-  </section>
+      <div id="ldr-car">
+        <div class="ldr-trail"></div>
 
-  <!-- MARQUEE -->
-  <div class="mq-wrap"><div class="mq-track" id="mtrack"></div></div>
+        <!-- Inline SVG sports car side-profile -->
+        <svg viewBox="0 0 288 102" width="288" height="102" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <filter id="cg" x="-25%" y="-60%" width="150%" height="220%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <linearGradient id="bd" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#0d1b2a"/>
+              <stop offset="100%" stop-color="#080f1e"/>
+            </linearGradient>
+          </defs>
+          <!-- Ground shadow -->
+          <ellipse cx="144" cy="98" rx="118" ry="5" fill="rgba(0,212,255,0.09)"/>
+          <!-- Main body -->
+          <path d="M20 62 L20 53 Q20 45 30 45 L60 45 L86 19 L192 17 L218 45 L264 45 Q272 45 272 53 L272 66 L20 66 Z"
+                fill="url(#bd)" stroke="#00d4ff" stroke-width="1.5" filter="url(#cg)"/>
+          <!-- Roofline -->
+          <path d="M88 44 L112 21 L190 19 L215 44 Z"
+                fill="rgba(0,14,30,0.85)" stroke="rgba(0,212,255,0.45)" stroke-width="1"/>
+          <!-- Windshield glass -->
+          <path d="M114 43 L130 23 L188 21 L212 43 Z"
+                fill="rgba(0,212,255,0.16)" stroke="rgba(0,212,255,0.52)" stroke-width="1"/>
+          <!-- B-pillar -->
+          <line x1="162" y1="22" x2="160" y2="43" stroke="rgba(0,212,255,0.42)" stroke-width="1.4"/>
+          <!-- Headlights (front = right) -->
+          <rect x="262" y="49" width="22" height="9" rx="3.5" fill="rgba(255,255,255,0.95)" filter="url(#cg)"/>
+          <rect x="260" y="44" width="17" height="6" rx="2.5" fill="#00d4ff" opacity="0.88" filter="url(#cg)"/>
+          <!-- Tail lights (rear = left) -->
+          <rect x="6" y="46" width="16" height="16" rx="3" fill="#ff1a4f" opacity="0.88" filter="url(#cg)"/>
+          <!-- Body accent crease -->
+          <path d="M30 57 L58 57 M80 57 L202 57 M218 57 L262 57" stroke="rgba(0,212,255,0.16)" stroke-width="1"/>
+          <!-- Spoiler -->
+          <rect x="8" y="35" width="22" height="6" rx="2.5" fill="url(#bd)" stroke="rgba(0,212,255,0.38)" stroke-width="1" filter="url(#cg)"/>
+          <line x1="10" y1="41" x2="10" y2="47" stroke="rgba(0,212,255,0.28)" stroke-width="1"/>
+          <line x1="28" y1="41" x2="28" y2="47" stroke="rgba(0,212,255,0.28)" stroke-width="1"/>
+          <!-- Side vent -->
+          <rect x="224" y="47" width="24" height="3.5" rx="1.5" fill="rgba(0,212,255,0.22)" stroke="rgba(0,212,255,0.32)" stroke-width="0.6"/>
+          <rect x="224" y="53" width="18" height="3.5" rx="1.5" fill="rgba(0,212,255,0.15)" stroke="rgba(0,212,255,0.22)" stroke-width="0.6"/>
+          <!-- Wheel arch cutouts -->
+          <circle cx="75" cy="66" r="23" fill="#0a0a0f"/>
+          <circle cx="214" cy="66" r="23" fill="#0a0a0f"/>
+          <!-- === REAR WHEEL (75, 66) === -->
+          <circle cx="75" cy="66" r="22" fill="#0c0c14" stroke="#00d4ff" stroke-width="1.7" filter="url(#cg)"/>
+          <circle cx="75" cy="66" r="13" fill="#090909" stroke="rgba(0,212,255,0.32)" stroke-width="1"/>
+          <!-- 5 spokes: angles 0,72,144,216,288 deg from top -->
+          <line x1="75" y1="59" x2="75" y2="53"     stroke="#00d4ff" stroke-width="2" stroke-linecap="round" opacity="0.78"/>
+          <line x1="82" y1="63" x2="87" y2="58"     stroke="#00d4ff" stroke-width="2" stroke-linecap="round" opacity="0.78"/>
+          <line x1="79" y1="72" x2="83" y2="77"     stroke="#00d4ff" stroke-width="2" stroke-linecap="round" opacity="0.78"/>
+          <line x1="71" y1="72" x2="67" y2="77"     stroke="#00d4ff" stroke-width="2" stroke-linecap="round" opacity="0.78"/>
+          <line x1="68" y1="63" x2="63" y2="58"     stroke="#00d4ff" stroke-width="2" stroke-linecap="round" opacity="0.78"/>
+          <circle cx="75" cy="66" r="5" fill="#00d4ff" opacity="0.82"/>
+          <!-- === FRONT WHEEL (214, 66) === -->
+          <circle cx="214" cy="66" r="22" fill="#0c0c14" stroke="#00d4ff" stroke-width="1.7" filter="url(#cg)"/>
+          <circle cx="214" cy="66" r="13" fill="#090909" stroke="rgba(0,212,255,0.32)" stroke-width="1"/>
+          <line x1="214" y1="59" x2="214" y2="53"   stroke="#00d4ff" stroke-width="2" stroke-linecap="round" opacity="0.78"/>
+          <line x1="221" y1="63" x2="226" y2="58"   stroke="#00d4ff" stroke-width="2" stroke-linecap="round" opacity="0.78"/>
+          <line x1="218" y1="72" x2="222" y2="77"   stroke="#00d4ff" stroke-width="2" stroke-linecap="round" opacity="0.78"/>
+          <line x1="210" y1="72" x2="206" y2="77"   stroke="#00d4ff" stroke-width="2" stroke-linecap="round" opacity="0.78"/>
+          <line x1="207" y1="63" x2="202" y2="58"   stroke="#00d4ff" stroke-width="2" stroke-linecap="round" opacity="0.78"/>
+          <circle cx="214" cy="66" r="5" fill="#00d4ff" opacity="0.82"/>
+        </svg>
 
-  <!-- INTEGRATIONS -->
-  <section class="sec" id="integrations">
-    <div class="int-head" data-aos="fade-up">
-      <span class="sec-lbl">The Stack</span>
-      <h2 class="sec-title">9 Powerful Integrations</h2>
-      <p class="sec-sub">Each library brings unique interactive capabilities — all working together in a single GitHub-managed project.</p>
-    </div>
-    <div class="int-grid">
-      <!-- Three.js: rotating CSS 3D cube -->
-      <div class="i-card" data-aos="fade-up" data-aos-delay="0" data-tilt>
-        <div class="c-demo"><div class="cd-cube-scene"><div class="cd-cube"><div class="cd-face cf"></div><div class="cd-face cb"></div><div class="cd-face cr"></div><div class="cd-face cl"></div><div class="cd-face ct"></div><div class="cd-face cbo"></div></div></div></div>
-        <h3 class="c-title">Three.js</h3>
-        <p class="c-desc">WebGL 3D in the browser — immersive scenes, shaders, and real-time GPU-accelerated animation.</p>
-        <div class="c-tags"><span class="tag tp">3D</span><span class="tag tp">WebGL</span><span class="tag">Real-time</span></div>
-      </div>
-      <!-- GSAP: staggered timeline bars -->
-      <div class="i-card" data-aos="fade-up" data-aos-delay="60" data-tilt>
-        <div class="c-demo"><div class="cd-gsap"><div class="cd-gbar"></div><div class="cd-gbar"></div><div class="cd-gbar"></div><div class="cd-gbar"></div></div></div>
-        <h3 class="c-title">GSAP</h3>
-        <p class="c-desc">Industry-standard animation — silky timelines, scroll-triggered reveals, morphing effects.</p>
-        <div class="c-tags"><span class="tag tn">Animation</span><span class="tag tn">ScrollTrigger</span><span class="tag">Timeline</span></div>
-      </div>
-      <!-- Particles.js: JS-populated floating dots -->
-      <div class="i-card" data-aos="fade-up" data-aos-delay="120" data-tilt>
-        <div class="c-demo"><div class="cd-pts" id="cd-pts3"></div></div>
-        <h3 class="c-title">Particles.js</h3>
-        <p class="c-desc">Interactive particle systems — configure density, speed, linking, and mouse interactions.</p>
-        <div class="c-tags"><span class="tag tg">Particles</span><span class="tag tg">Canvas</span><span class="tag">Mouse</span></div>
-      </div>
-      <!-- Chart.js: animated mini bar chart -->
-      <div class="i-card" data-aos="fade-up" data-aos-delay="0" data-tilt>
-        <div class="c-demo"><div class="cd-chart-mini"><div class="cd-cbar" style="height:42px"></div><div class="cd-cbar" style="height:54px"></div><div class="cd-cbar" style="height:36px"></div><div class="cd-cbar" style="height:48px"></div><div class="cd-cbar" style="height:30px"></div></div></div>
-        <h3 class="c-title">Chart.js</h3>
-        <p class="c-desc">Animated data visualizations — radar, bar, doughnut charts, fully responsive with smooth entry.</p>
-        <div class="c-tags"><span class="tag to2">Data Viz</span><span class="tag">Charts</span><span class="tag">Responsive</span></div>
-      </div>
-      <!-- Typed.js: live typing inside the card -->
-      <div class="i-card" data-aos="fade-up" data-aos-delay="60" data-tilt>
-        <div class="c-demo"><div class="cd-typed-demo"><span id="cd-typed5"></span><span class="cd-cursor-blink"></span></div></div>
-        <h3 class="c-title">Typed.js</h3>
-        <p class="c-desc">Realistic typing animations on any element — adds a live, human feel to hero sections.</p>
-        <div class="c-tags"><span class="tag tp">Typing</span><span class="tag">UX</span><span class="tag">Animation</span></div>
-      </div>
-      <!-- Swiper.js: CSS-animated sliding feature list -->
-      <div class="i-card" data-aos="fade-up" data-aos-delay="120" data-tilt>
-        <div class="c-demo"><div class="cd-swiper-demo"><div class="cd-swiper-track">
-          <div class="cd-sslide"><span style="color:var(--neon)">◆</span> Touch Slider</div>
-          <div class="cd-sslide"><span style="color:var(--pink)">◆</span> 3D Cube Mode</div>
-          <div class="cd-sslide"><span style="color:var(--gold)">◆</span> Auto-play</div>
-          <div class="cd-sslide"><span style="color:var(--neon)">◆</span> Touch Slider</div>
-        </div></div></div>
-        <h3 class="c-title">Swiper.js</h3>
-        <p class="c-desc">Modern touch slider — 3D effects, dozens of transitions, full accessibility baked in.</p>
-        <div class="c-tags"><span class="tag tn">Carousel</span><span class="tag">Touch</span><span class="tag">A11y</span></div>
-      </div>
-      <!-- AOS: slide-in reveal bars -->
-      <div class="i-card" data-aos="fade-up" data-aos-delay="0" data-tilt>
-        <div class="c-demo"><div class="cd-aos-demo"><div class="cd-aos-el"></div><div class="cd-aos-el"></div><div class="cd-aos-el"></div><div class="cd-aos-el"></div></div></div>
-        <h3 class="c-title">AOS</h3>
-        <p class="c-desc">Animate On Scroll — trigger entrance animations as elements enter the viewport.</p>
-        <div class="c-tags"><span class="tag tp">Scroll</span><span class="tag tp">Reveal</span><span class="tag">Viewport</span></div>
-      </div>
-      <!-- Vanilla Tilt: rocking 3D card preview -->
-      <div class="i-card" data-aos="fade-up" data-aos-delay="60" data-tilt>
-        <div class="c-demo"><div class="cd-tilt-preview"><div class="cd-tilt-card">3D Tilt<div class="cd-tilt-shine"></div></div></div></div>
-        <h3 class="c-title">Vanilla Tilt</h3>
-        <p class="c-desc">GPU-accelerated 3D parallax tilt on hover — feel it on every card in this grid right now.</p>
-        <div class="c-tags"><span class="tag tn">3D Hover</span><span class="tag">Parallax</span><span class="tag">GPU</span></div>
-      </div>
-      <!-- Lenis: smooth-scroll page mockup -->
-      <div class="i-card" data-aos="fade-up" data-aos-delay="120" data-tilt>
-        <div class="c-demo"><div class="cd-lenis-demo">
-          <div class="cd-lenis-lines"><div class="cd-lline"></div><div class="cd-lline"></div><div class="cd-lline"></div><div class="cd-lline"></div><div class="cd-lline"></div><div class="cd-lline"></div><div class="cd-lline"></div></div>
-          <div class="cd-lenis-bar"><div class="cd-lenis-thumb"></div></div>
-        </div></div>
-        <h3 class="c-title">Lenis</h3>
-        <p class="c-desc">Buttery smooth scroll with physics-based easing — makes the entire page feel silky.</p>
-        <div class="c-tags"><span class="tag tg">Smooth Scroll</span><span class="tag tg">Physics</span><span class="tag">UX</span></div>
+        <div class="ldr-beam"></div>
       </div>
     </div>
-  </section>
 
-  <div class="divider"></div>
-
-  <!-- LOTTIE -->
-  <section class="sec" id="lottie-sec">
-    <div class="int-head" data-aos="fade-up">
-      <span class="sec-lbl">Lottie.js — Live</span>
-      <h2 class="sec-title">Vector <span class="grad">Animations</span></h2>
-      <p class="sec-sub">Lottie renders After Effects animations as lightweight JSON — crisp at any resolution, interactive, tiny file size.</p>
-    </div>
-    <div class="lottie-grid">
-      <div class="lottie-card float-a" data-aos="zoom-in" data-aos-delay="0">
-        <div class="lottie-anim" id="la1">
-          <div class="la-fallback">
-            <div class="la-orb">
-              <div class="la-orb-core"></div>
-              <div class="la-ring r1"><div class="la-planet p1"></div></div>
-              <div class="la-ring r2"><div class="la-planet p2"></div></div>
-              <div class="la-ring r3"><div class="la-planet p3"></div></div>
-            </div>
-          </div>
-          <div class="la-lt" id="lt1"></div>
-        </div>
-        <h3 class="lottie-title">3D Scene Rendering</h3>
-        <p class="lottie-desc">Complex After Effects motion graphics exported as JSON — rendered at 60fps with zero canvas overhead.</p>
-        <span class="lottie-badge">Lottie.js</span>
+    <!-- Progress bar -->
+    <div class="ldr-progress">
+      <div class="ldr-bar-track">
+        <div class="ldr-bar-fill" id="ldr-bar"></div>
       </div>
-      <div class="lottie-card float-b" data-aos="zoom-in" data-aos-delay="100">
-        <div class="lottie-anim" id="la2">
-          <div class="la-fallback">
-            <div class="la-chart-wrap">
-              <div class="la-bar"></div>
-              <div class="la-bar"></div>
-              <div class="la-bar"></div>
-              <div class="la-bar"></div>
-              <div class="la-bar"></div>
-            </div>
-          </div>
-          <div class="la-lt" id="lt2"></div>
-        </div>
-        <h3 class="lottie-title">Data Visualization</h3>
-        <p class="lottie-desc">Animate chart reveals and data stories — Lottie hooks into scroll events for triggered playback.</p>
-        <span class="lottie-badge">Lottie.js</span>
-      </div>
-      <div class="lottie-card float-c" data-aos="zoom-in" data-aos-delay="200">
-        <div class="lottie-anim" id="la3">
-          <div class="la-fallback">
-            <div class="la-pulse-wrap">
-              <div class="la-pring pr1"></div>
-              <div class="la-pring pr2"></div>
-              <div class="la-pring pr3"></div>
-              <div class="la-ico">✦</div>
-            </div>
-          </div>
-          <div class="la-lt" id="lt3"></div>
-        </div>
-        <h3 class="lottie-title">Micro-interaction Icons</h3>
-        <p class="lottie-desc">Replace static icons with animated Lottie icons that react on hover, click, and scroll entry.</p>
-        <span class="lottie-badge">Lottie.js</span>
-      </div>
-    </div>
-  </section>
-
-  <div class="divider"></div>
-
-  <!-- 3D DEMO -->
-  <div class="demo-wrap" id="demo-3d">
-    <div class="demo-inner">
-      <div class="demo-layout">
-        <div data-aos="fade-right">
-          <span class="sec-lbl">Three.js — Live</span>
-          <h2 class="sec-title">Interactive<br><span class="grad">3D Playground</span></h2>
-          <p class="sec-sub" style="margin-bottom:1.4rem">Drag to orbit. Pick Car or Robot — then drive with your keyboard or arrow keys.</p>
-          <div class="f-list">
-            <div class="f-item"><div class="f-ico">🖱️</div><div class="f-txt"><h4>Drag to Orbit</h4><p>Click and drag anywhere on the canvas to spin the camera freely</p></div></div>
-            <div class="f-item"><div class="f-ico">⌨️</div><div class="f-txt"><h4>Keyboard Drive</h4><p>W A S D or arrow keys — steer the car, walk the robot</p></div></div>
-            <div class="f-item"><div class="f-ico">🔄</div><div class="f-txt"><h4>Live Object Swap</h4><p>Switch between geometries, car and robot instantly</p></div></div>
-          </div>
-        </div>
-        <div data-aos="fade-left">
-          <!-- Controls sit ABOVE the canvas so they're impossible to miss -->
-          <div class="demo-ctrls">
-            <span class="demo-ctrls-label">Object:</span>
-            <button class="d-btn d-btn-car active" onclick="setGeo('car',this)">🚗 Car</button>
-            <button class="d-btn d-btn-robot" onclick="setGeo('robot',this)">🤖 Robot</button>
-            <button class="d-btn" onclick="setGeo('torusKnot',this)">Torus Knot</button>
-            <button class="d-btn" onclick="setGeo('icosahedron',this)">Icosahedron</button>
-            <button class="d-btn" onclick="setGeo('octahedron',this)">Octahedron</button>
-            <button class="d-btn" id="wire-btn" onclick="toggleWire(this)">Wireframe</button>
-          </div>
-          <div id="drive-hint">⌨️ &nbsp;<kbd>W A S D</kbd> or <kbd>↑ ↓ ← →</kbd> to move &nbsp;·&nbsp; Drag to orbit</div>
-          <div id="three-demo"></div>
-        </div>
+      <div class="ldr-bar-info">
+        <span class="ldr-text">Loading Experience...</span>
+        <span class="ldr-pct" id="ldr-pct">0%</span>
       </div>
     </div>
   </div>
 
-  <!-- STATS -->
-  <div class="stats-bg">
-    <div class="stats-inner">
-      <div class="stats-grid">
-        <div data-aos="fade-up" data-aos-delay="0">  <div class="s-num sp" data-target="98">0</div><div class="s-lbl">Lighthouse Score</div></div>
-        <div data-aos="fade-up" data-aos-delay="70"> <div class="s-num sn" data-target="9">0</div> <div class="s-lbl">Libraries Used</div></div>
-        <div data-aos="fade-up" data-aos-delay="140"><div class="s-num sg" data-target="60">0</div><div class="s-lbl">FPS Animations</div></div>
-        <div data-aos="fade-up" data-aos-delay="210"><div class="s-num so" data-target="100">0</div><div class="s-lbl">% Open Source</div></div>
-      </div>
-    </div>
-  </div>
+  <!-- Exit curtain wipe -->
+  <div id="ldr-curtain" aria-hidden="true"></div>
 
-  <!-- CHARTS -->
-  <section class="sec" id="charts">
-    <div data-aos="fade-up">
-      <span class="sec-lbl">Chart.js — Live</span>
-      <h2 class="sec-title">Animated <span class="grad">Visualizations</span></h2>
-      <p class="sec-sub">Real data, smooth entry animations, rendered on first scroll.</p>
-    </div>
-    <div class="charts-grid">
-      <div class="ch-card" data-aos="fade-right"><h3>Library Quality Scores</h3><canvas id="radar-chart" height="270"></canvas></div>
-      <div class="ch-card" data-aos="fade-left"><h3>Bundle Size (KB minified)</h3><canvas id="bar-chart" height="270"></canvas></div>
-    </div>
-  </section>
+  <!-- ═══════════════════════════════════════════
+       SITE CONTENT — phases 2-6 appended below
+  ═══════════════════════════════════════════ -->
 
-  <div class="divider"></div>
-
-  <!-- WORKFLOW -->
-  <section class="sec" id="workflow">
-    <div style="text-align:center" data-aos="fade-up">
-      <span class="sec-lbl">Process</span>
-      <h2 class="sec-title">GitHub-Based <span class="grad">Workflow</span></h2>
-      <p class="sec-sub" style="margin:0 auto">From zero to a live deployed interactive website in 5 clear steps.</p>
-    </div>
-    <div class="wf-steps">
-      <div class="wf-step" data-aos="fade-up" data-aos-delay="0">  <div class="wf-num w1">01</div><h4>Init Repo</h4>  <p>GitHub repo with branch protection, CI, and PR templates</p></div>
-      <div class="wf-step" data-aos="fade-up" data-aos-delay="70"> <div class="wf-num w2">02</div><h4>Add Libraries</h4><p>CDN or NPM with version pinning for reproducible builds</p></div>
-      <div class="wf-step" data-aos="fade-up" data-aos-delay="140"><div class="wf-num w3">03</div><h4>Build Features</h4><p>3D scenes, animations, charts per feature branch</p></div>
-      <div class="wf-step" data-aos="fade-up" data-aos-delay="210"><div class="wf-num w4">04</div><h4>PR &amp; Review</h4>  <p>Code review, Lighthouse audit, cross-browser test</p></div>
-      <div class="wf-step" data-aos="fade-up" data-aos-delay="280"><div class="wf-num w5">05</div><h4>Deploy Live</h4>  <p>Merge → auto-deploy Vercel with instant preview URL</p></div>
-    </div>
-  </section>
-
-  <!-- SWIPER -->
-  <div class="sw-wrap" id="showcase">
-    <div class="sw-inner">
-      <div class="sw-head" data-aos="fade-up">
-        <span class="sec-lbl">Use Cases</span>
-        <h2 class="sec-title">What You Can <span class="grad">Build</span></h2>
-        <p class="sec-sub">Results from teams using this integration stack.</p>
-      </div>
-      <div class="swiper mySw" data-aos="fade-up">
-        <div class="swiper-wrapper">
-          <div class="swiper-slide"><div class="sw-card"><div class="sw-stars">★★★★★</div><p class="sw-quote">"Three.js and GSAP ScrollTrigger on our landing page. Time-on-page up 340%, conversion rate doubled in the first week."</p><div class="sw-auth"><div class="sw-av" style="background:linear-gradient(135deg,#f72585,#06ffa5)">S</div><div><div class="sw-name">SaaS Landing Page</div><div class="sw-role">Three.js · GSAP ScrollTrigger</div></div></div></div></div>
-          <div class="swiper-slide"><div class="sw-card"><div class="sw-stars">★★★★★</div><p class="sw-quote">"Particles.js background + Vanilla Tilt on every card. Recruiters say it's the most memorable portfolio they've seen."</p><div class="sw-auth"><div class="sw-av" style="background:linear-gradient(135deg,#ff6d00,#ffd60a)">P</div><div><div class="sw-name">Developer Portfolio</div><div class="sw-role">Particles.js · Vanilla Tilt · AOS</div></div></div></div></div>
-          <div class="swiper-slide"><div class="sw-card"><div class="sw-stars">★★★★★</div><p class="sw-quote">"Chart.js animated dashboard + Lottie icons. Users explore every section — engagement up 280% since launch."</p><div class="sw-auth"><div class="sw-av" style="background:linear-gradient(135deg,#06ffa5,#ffd60a)">D</div><div><div class="sw-name">Analytics Dashboard</div><div class="sw-role">Chart.js · Lottie · AOS</div></div></div></div></div>
-          <div class="swiper-slide"><div class="sw-card"><div class="sw-stars">★★★★★</div><p class="sw-quote">"Swiper galleries + Three.js 3D viewer. Product engagement up 180%, customers explore far longer before checkout."</p><div class="sw-auth"><div class="sw-av" style="background:linear-gradient(135deg,#ff4361,#f72585)">E</div><div><div class="sw-name">E-Commerce Store</div><div class="sw-role">Swiper.js · Three.js · GSAP</div></div></div></div></div>
-        </div>
-        <div class="swiper-pagination"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- FOOTER -->
-  <footer>
-    <div class="ft-logo">InteractX Framework</div>
-    <p class="ft-txt">Open-source integrations for immersive, high-performance web experiences.</p>
-    <div class="ft-tags">
-      <span class="ft-tag">Three.js</span><span class="ft-tag">GSAP</span><span class="ft-tag">Lottie</span>
-      <span class="ft-tag">Particles.js</span><span class="ft-tag">Chart.js</span><span class="ft-tag">Typed.js</span>
-      <span class="ft-tag">Swiper.js</span><span class="ft-tag">AOS</span><span class="ft-tag">Vanilla Tilt</span>
-      <span class="ft-tag">Lenis</span><span class="ft-tag">GitHub → Vercel</span>
-    </div>
-    <p class="ft-copy">Deployed via GitHub Actions → Vercel. 100% open-source.</p>
-  </footer>
-
-  <!-- SCRIPTS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.5/swiper-bundle.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
-
+  <!-- Preloader script: runs immediately, sets window._loaderDone when finished -->
   <script>
-  /* ═══════════════ PRELOADER — fixed disappear ══════════════ */
-  gsap.registerPlugin(ScrollTrigger);
+  (function () {
+    const loaderEl = document.getElementById('loader');
+    const ldrBar   = document.getElementById('ldr-bar');
+    const ldrPct   = document.getElementById('ldr-pct');
+    const ldrCar   = document.getElementById('ldr-car');
+    const curtain  = document.getElementById('ldr-curtain');
 
-  const pct = { v: 0 };
-  const preTimeline = gsap.timeline({
-    onComplete() {
-      /* Completely remove preloader from layout so nothing blocks scroll */
-      document.getElementById('preloader').style.display = 'none';
-      document.getElementById('pre-top').style.display  = 'none';
-      document.getElementById('pre-bot').style.display  = 'none';
-      startSite();
-    }
-  });
+    // Park car off-screen left
+    gsap.set(ldrCar, { x: -360 });
 
-  preTimeline
-    /* fill bar + counter */
-    .to(pct, {
-      v: 100, duration: 2, ease: 'power2.inOut',
-      onUpdate() {
-        document.getElementById('pre-fill').style.width = pct.v + '%';
-        document.getElementById('pre-num').textContent  = Math.round(pct.v) + '%';
+    const tl = gsap.timeline({ delay: 0.25 });
+
+    // Fade in logo + tagline
+    tl.to('.ldr-logo',     { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' })
+      .to('.ldr-tagline',  { opacity: 1,        duration: 0.4,  ease: 'power2.out' }, '-=0.3')
+      .to('.ldr-progress', { opacity: 1,        duration: 0.35, ease: 'power2.out' }, '-=0.2');
+
+    // Drive the car + fill bar simultaneously
+    const st = { v: 0 };
+    tl.to(st, {
+      v: 100, duration: 2.25, ease: 'power2.inOut',
+      onUpdate () {
+        const p = st.v / 100;
+        gsap.set(ldrCar, { x: -360 + p * (window.innerWidth + 720) });
+        ldrBar.style.width  = st.v + '%';
+        ldrPct.textContent  = Math.round(st.v) + '%';
+      },
+      onComplete () {
+        // Curtain wipe reveal
+        gsap.delayedCall(0.22, function () {
+          gsap.set(curtain, { y: '100%' });
+          gsap.to(curtain, {
+            y: '0%', duration: 0.58, ease: 'expo.inOut',
+            onComplete () {
+              loaderEl.style.display = 'none';
+              gsap.to(curtain, {
+                y: '-100%', duration: 0.65, ease: 'expo.inOut',
+                onComplete () {
+                  curtain.style.display = 'none';
+                  if (typeof window._startSite === 'function') window._startSite();
+                  else window._loaderDone = true;
+                }
+              });
+            }
+          });
+        });
       }
-    })
-    /* slide curtain halves in from edges to cover the spinning preloader */
-    .to('#pre-top', { translateY: '0%', duration: .7, ease: 'expo.inOut' }, '+=.1')
-    .to('#pre-bot', { translateY: '0%', duration: .7, ease: 'expo.inOut' }, '<')
-    /* curtain splits open to reveal page */
-    .to('#pre-top', { translateY: '-100%', duration: .75, ease: 'expo.inOut' }, '+=.25')
-    .to('#pre-bot', { translateY:  '100%', duration: .75, ease: 'expo.inOut' }, '<');
-
-  function startSite() {
-    gsap.timeline()
-      .from('.h-badge', { opacity:0, y:16, duration:.5,  ease:'power2.out' })
-      .from('.h-title',  { opacity:0, y:32, duration:.7,  ease:'power3.out' }, '-=.2')
-      .from('.h-sub',    { opacity:0, y:18, duration:.55, ease:'power2.out' }, '-=.28')
-      .from('.h-typed',  { opacity:0, y:14, duration:.45, ease:'power2.out' }, '-=.2')
-      .from('.h-btns',   { opacity:0, y:18, duration:.45, ease:'power2.out' }, '-=.18')
-      .from('.scroll-ind',{opacity:0, y:8,  duration:.4,  ease:'power2.out' }, '-=.1');
-  }
-
-  /* Native scroll — hardware accelerated, no JS interception */
-
-  /* ═══════════════ SCROLL PROGRESS BAR ══════════════════════ */
-  window.addEventListener('scroll', () => {
-    const p = window.scrollY / (document.body.scrollHeight - innerHeight) * 100;
-    document.getElementById('prog').style.width = p + '%';
-  }, { passive: true });
-
-  /* ═══════════════ CUSTOM CURSOR (single RAF) ════════════════ */
-  const curEl  = document.getElementById('cur');
-  const ringEl = document.getElementById('cur-ring');
-  let cx=0, cy=0, rx=0, ry=0;
-
-  document.addEventListener('mousemove', e => { cx=e.clientX; cy=e.clientY; }, { passive:true });
-
-  (function tick() {
-    requestAnimationFrame(tick);
-    /* cursor: instant */
-    curEl.style.transform = `translate(calc(${cx}px - 50%), calc(${cy}px - 50%))`;
-    /* ring: laggy follow */
-    rx += (cx-rx) * .12;
-    ry += (cy-ry) * .12;
-    ringEl.style.transform = `translate(calc(${rx}px - 50%), calc(${ry}px - 50%))`;
-  })();
-
-  document.querySelectorAll('a,button,.i-card,.sw-card,.ch-card,.lottie-card').forEach(el => {
-    el.addEventListener('mouseenter', () => { curEl.style.transform += ' scale(2)'; ringEl.style.borderColor='rgba(247,37,133,.6)'; }, { passive:true });
-    el.addEventListener('mouseleave', () => { ringEl.style.borderColor='rgba(247,37,133,.38)'; }, { passive:true });
-  });
-
-  /* ═══════════════ MAGNETIC BUTTONS ════════════════════════ */
-  document.querySelectorAll('.mag-btn').forEach(btn => {
-    btn.addEventListener('mousemove', e => {
-      const r = btn.getBoundingClientRect();
-      gsap.to(btn, { x:(e.clientX-(r.left+r.width/2))*.2, y:(e.clientY-(r.top+r.height/2))*.2, duration:.3, ease:'power2.out' });
-    });
-    btn.addEventListener('mouseleave', () => gsap.to(btn, { x:0, y:0, duration:.5, ease:'elastic.out(1,.4)' }));
-  });
-
-  /* ═══════════════ MARQUEE ══════════════════════════════════ */
-  const libs = ['Three.js','GSAP','Particles.js','Lottie','Chart.js','Typed.js','Swiper.js','AOS','Vanilla Tilt','Lenis'];
-  const track = document.getElementById('mtrack');
-  [...libs,...libs,...libs,...libs].forEach(l => {
-    track.innerHTML += `<div class="mq-item"><span>◆</span>${l}</div>`;
-  });
-
-  /* ═══════════════ AOS + SWIPER + VANILLA TILT ══════════════ */
-  AOS.init({ duration:650, once:true, offset:60, easing:'ease-out-cubic' });
-
-  new Swiper('.mySw', {
-    slidesPerView:1, spaceBetween:20,
-    pagination:{ el:'.swiper-pagination', clickable:true },
-    breakpoints:{ 640:{slidesPerView:2}, 1024:{slidesPerView:3} },
-    autoplay:{ delay:4500, disableOnInteraction:false },
-  });
-
-  VanillaTilt.init(document.querySelectorAll('[data-tilt]'), { max:8, speed:450, glare:true, 'max-glare':.1 });
-
-  /* ═══════════════ CARD MINI-DEMOS ══════════════════════════ */
-  /* Typed.js inside the Typed.js card */
-  new Typed('#cd-typed5', {
-    strings: ['gsap.to()', 'timeline()', 'ScrollTrigger', 'stagger()'],
-    typeSpeed:55, backSpeed:30, loop:true, backDelay:1400, showCursor:false
-  });
-
-  /* Particles.js card — floating colored dots via JS */
-  (function() {
-    const wrap = document.getElementById('cd-pts3');
-    const colors = ['#f72585','#06ffa5','#ffd60a','#ff6d00','#ff4361'];
-    for(let i=0; i<12; i++) {
-      const pt = document.createElement('div');
-      pt.className = 'cd-pt';
-      const sz = 3 + Math.random()*4;
-      const c = colors[i % colors.length];
-      pt.style.cssText =
-        `left:${Math.random()*90}%;top:${Math.random()*80}%;` +
-        `width:${sz}px;height:${sz}px;background:${c};` +
-        `box-shadow:0 0 ${sz*2}px ${c};` +
-        `--tx:${(Math.random()-.5)*28}px;--ty:${(Math.random()-.5)*22}px;` +
-        `animation-duration:${2+Math.random()*2.5}s;` +
-        `animation-delay:${-Math.random()*3}s`;
-      wrap.appendChild(pt);
-    }
-  })();
-
-  /* ═══════════════ TYPED.JS ══════════════════════════════════ */
-  new Typed('#h-typed', {
-    strings:['Three.js 3D Scenes','GSAP Scroll Animations','Lottie Vector Animations',
-      'Particle Background Systems','Real-time Data Dashboards','Immersive Micro-interactions'],
-    typeSpeed:45, backSpeed:25, loop:true, backDelay:2000,
-  });
-
-  /* ═══════════════ PARTICLES.JS (lightweight config) ════════ */
-  particlesJS('p-hero', {
-    particles:{
-      number:{ value:38, density:{ enable:true, value_area:900 } },
-      color: { value:['#f72585','#06ffa5','#ffd60a'] },
-      shape: { type:'circle' },
-      opacity:{ value:.3, random:true },
-      size:  { value:2, random:true },
-      /* line_linked disabled — it's the heaviest particle feature */
-      line_linked:{ enable:false },
-      move:{ enable:true, speed:.6, random:true, out_mode:'out' },
-    },
-    interactivity:{
-      detect_on:'canvas',
-      events:{ onhover:{ enable:true, mode:'bubble' }, resize:true },
-      modes:{ bubble:{ distance:120, size:4, duration:.3, opacity:.6 } },
-    },
-    retina_detect:true,
-  });
-
-  /* ═══════════════ THREE.JS HERO (pauses when off-screen) ════ */
-  let heroPlaying = true;
-  {
-    const canvas = document.getElementById('hero-canvas');
-    const R = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true, powerPreference:'high-performance' });
-    R.setPixelRatio(Math.min(devicePixelRatio, 2));
-    R.setSize(innerWidth, innerHeight);
-
-    const scene = new THREE.Scene();
-    const cam   = new THREE.PerspectiveCamera(45, innerWidth/innerHeight, .1, 200);
-    cam.position.z = 5;
-
-    scene.add(new THREE.AmbientLight(0xfff0f8, .4));
-    const l1 = new THREE.PointLight(0xf72585, 2.8, 20); l1.position.set(3,3,3);   scene.add(l1);
-    const l2 = new THREE.PointLight(0x06ffa5, 2.5, 20); l2.position.set(-3,-3,3); scene.add(l2);
-    const l3 = new THREE.PointLight(0xffd60a, 2,   20); l3.position.set(0,2,-5);  scene.add(l3);
-
-    const geo  = new THREE.TorusKnotGeometry(1,.3,100,14);
-    const mat  = new THREE.MeshPhongMaterial({ color:0xf72585, emissive:0x2d0015, specular:0x06ffa5, shininess:110 });
-    const mesh = new THREE.Mesh(geo, mat); scene.add(mesh);
-    const wm   = new THREE.MeshBasicMaterial({ color:0x06ffa5, wireframe:true, transparent:true, opacity:.05 });
-    scene.add(new THREE.Mesh(geo.clone(), wm));
-
-    /* Fewer stars = faster */
-    const sPos = new Float32Array(1500*3);
-    for(let i=0;i<sPos.length;i++) sPos[i]=(Math.random()-.5)*110;
-    const sG = new THREE.BufferGeometry();
-    sG.setAttribute('position', new THREE.BufferAttribute(sPos,3));
-    scene.add(new THREE.Points(sG, new THREE.PointsMaterial({ color:0xfff0f8, size:.055, transparent:true, opacity:.38 })));
-
-    let hx=0, hy=0;
-    document.addEventListener('mousemove', e => { hx=(e.clientX/innerWidth-.5)*2; hy=(e.clientY/innerHeight-.5)*2; }, { passive:true });
-    window.addEventListener('resize', () => { cam.aspect=innerWidth/innerHeight; cam.updateProjectionMatrix(); R.setSize(innerWidth,innerHeight); });
-
-    /* Pause hero renderer when not visible — big scroll perf win */
-    const heroObs = new IntersectionObserver(([e]) => { heroPlaying = e.isIntersecting; }, { threshold:0 });
-    heroObs.observe(document.getElementById('hero'));
-
-    let t=0;
-    (function a() {
-      requestAnimationFrame(a);
-      if(!heroPlaying) return;   /* skip render when hero off-screen */
-      t+=.008;
-      mesh.rotation.x += .004 + hy*.0007;
-      mesh.rotation.y += .007 + hx*.0007;
-      l1.position.set(Math.sin(t)*5, Math.cos(t)*4, 3);
-      l2.position.set(Math.cos(t*.8)*5, -2, Math.sin(t*.8)*5);
-      R.render(scene,cam);
-    })();
-  }
-
-  /* ═══════════════ THREE.JS DEMO SECTION ════════════════════ */
-  let dScene, dCam, dRenderer, demoGroup = null;
-  let dMesh, dWire, wireOn = false, currentGeo = 'torusKnot';
-  let robotParts = {}, wheelMeshes = [], walkCycle = 0, demoPlaying = false;
-
-  /* Keyboard state — only block page scroll when actively driving in the 3D section */
-  const keys = {};
-  window.addEventListener('keydown', e => {
-    if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','KeyW','KeyA','KeyS','KeyD'].includes(e.code)){
-      keys[e.code] = true;
-      if(demoPlaying && (currentGeo==='car'||currentGeo==='robot')) e.preventDefault();
-    }
-  }, false);
-  window.addEventListener('keyup', e => { keys[e.code] = false; });
-
-  /* Camera spherical-coordinate orbit */
-  let camTheta=0.4, camPhi=1.1, camR=4.5, tTheta=0.4, tPhi=1.1;
-  let orbitDown=false, orbitSX=0, orbitSY=0, orbitBT=0, orbitBP=0;
-
-  {
-    const el = document.getElementById('three-demo');
-    dRenderer = new THREE.WebGLRenderer({ antialias:true, alpha:true, powerPreference:'high-performance' });
-    dRenderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
-    dRenderer.setSize(el.offsetWidth, el.offsetHeight);
-    dRenderer.setClearColor(0x100818, 1);
-    el.appendChild(dRenderer.domElement);
-    el.style.cursor = 'grab';
-
-    dScene = new THREE.Scene();
-    dCam   = new THREE.PerspectiveCamera(45, el.offsetWidth/el.offsetHeight, 0.1, 100);
-    dScene.add(new THREE.AmbientLight(0xfff0f8, 0.35));
-    const dl1 = new THREE.PointLight(0xf72585, 4,   18); dl1.position.set( 4, 4, 4);  dScene.add(dl1);
-    const dl2 = new THREE.PointLight(0x06ffa5, 3.5, 18); dl2.position.set(-4,-2, 4);  dScene.add(dl2);
-    const dl3 = new THREE.PointLight(0xffd60a, 2.2, 14); dl3.position.set( 0, 4,-4);  dScene.add(dl3);
-    const grid = new THREE.GridHelper(18, 26, 0x220b30, 0x1a0822); grid.position.y=-1.6; dScene.add(grid);
-
-    buildDemoObject('car');
-
-    /* Orbit — mouse */
-    el.addEventListener('mousedown', e => {
-      orbitDown=true; orbitSX=e.clientX; orbitSY=e.clientY; orbitBT=tTheta; orbitBP=tPhi;
-      el.style.cursor='grabbing';
-    });
-    window.addEventListener('mouseup',  () => { orbitDown=false; el.style.cursor='grab'; });
-    window.addEventListener('mousemove', e => {
-      if(!orbitDown) return;
-      tTheta = orbitBT + (e.clientX-orbitSX)*0.007;
-      tPhi   = Math.max(0.12, Math.min(2.8, orbitBP+(e.clientY-orbitSY)*0.007));
-    });
-    /* Orbit — touch */
-    el.addEventListener('touchstart', e => {
-      const t=e.touches[0]; orbitDown=true;
-      orbitSX=t.clientX; orbitSY=t.clientY; orbitBT=tTheta; orbitBP=tPhi;
-    }, {passive:true});
-    window.addEventListener('touchend',  () => { orbitDown=false; });
-    window.addEventListener('touchmove', e => {
-      if(!orbitDown) return; const t=e.touches[0];
-      tTheta = orbitBT + (t.clientX-orbitSX)*0.007;
-      tPhi   = Math.max(0.12, Math.min(2.8, orbitBP+(t.clientY-orbitSY)*0.007));
-    }, {passive:true});
-    /* Scroll to zoom */
-    el.addEventListener('wheel', e => { camR=Math.max(2.5,Math.min(9,camR+e.deltaY*0.004)); e.preventDefault(); }, {passive:false});
-
-    const demoObs = new IntersectionObserver(([e])=>{ demoPlaying=e.isIntersecting; },{threshold:0});
-    demoObs.observe(el);
-
-    let dt=0;
-    (function da() {
-      requestAnimationFrame(da);
-      if(!demoPlaying) return;
-      dt += 0.01;
-      /* Smooth spherical camera */
-      camTheta += (tTheta-camTheta)*0.09;
-      camPhi   += (tPhi  -camPhi  )*0.09;
-      const sp=Math.sin(camPhi), cp=Math.cos(camPhi), st=Math.sin(camTheta), ct=Math.cos(camTheta);
-      dCam.position.set(camR*sp*st, camR*cp, camR*sp*ct);
-      dCam.lookAt(0, 0, 0);
-      dl1.position.set(Math.sin(dt)*5.5, 3.5, Math.cos(dt)*5.5);
-      if(demoGroup){
-        if(currentGeo==='car')        updateCar();
-        else if(currentGeo==='robot') updateRobot(dt);
-        else if(!orbitDown)           demoGroup.rotation.y += 0.006;
-      }
-      dRenderer.render(dScene, dCam);
-    })();
-  }
-
-  function updateCar() {
-    const spd=0.065, turn=0.048; let mv=false;
-    if(keys['ArrowUp']   ||keys['KeyW']){ demoGroup.translateZ(-spd);     mv=true; }
-    if(keys['ArrowDown'] ||keys['KeyS']){ demoGroup.translateZ( spd*.6);  mv=true; }
-    if(keys['ArrowLeft'] ||keys['KeyA']) demoGroup.rotation.y += turn;
-    if(keys['ArrowRight']||keys['KeyD']) demoGroup.rotation.y -= turn;
-    demoGroup.position.x = Math.max(-6,Math.min(6,demoGroup.position.x));
-    demoGroup.position.z = Math.max(-6,Math.min(6,demoGroup.position.z));
-    if(mv) wheelMeshes.forEach(w => w.rotation.x += 0.15);
-  }
-
-  function updateRobot(dt) {
-    const spd=0.045; let mv=false;
-    if(keys['ArrowUp']   ||keys['KeyW']){ demoGroup.position.z-=spd; demoGroup.rotation.y=0;          mv=true; }
-    if(keys['ArrowDown'] ||keys['KeyS']){ demoGroup.position.z+=spd; demoGroup.rotation.y=Math.PI;    mv=true; }
-    if(keys['ArrowLeft'] ||keys['KeyA']){ demoGroup.position.x-=spd; demoGroup.rotation.y=-Math.PI/2; mv=true; }
-    if(keys['ArrowRight']||keys['KeyD']){ demoGroup.position.x+=spd; demoGroup.rotation.y= Math.PI/2; mv=true; }
-    demoGroup.position.x = Math.max(-6,Math.min(6,demoGroup.position.x));
-    demoGroup.position.z = Math.max(-6,Math.min(6,demoGroup.position.z));
-    if(mv){
-      walkCycle += 0.22;
-      const sw=Math.sin(walkCycle)*0.52;
-      if(robotParts.lLeg) robotParts.lLeg.rotation.x= sw;
-      if(robotParts.rLeg) robotParts.rLeg.rotation.x=-sw;
-      if(robotParts.lArm) robotParts.lArm.rotation.x=-sw*.5;
-      if(robotParts.rArm) robotParts.rArm.rotation.x= sw*.5;
-    } else {
-      ['lLeg','rLeg','lArm','rArm'].forEach(k=>{ if(robotParts[k]) robotParts[k].rotation.x*=0.82; });
-      if(robotParts.head) robotParts.head.position.y = 1.17+Math.sin(dt*1.8)*0.022;
-    }
-  }
-
-  /* Helper: build a mesh and add it to a parent */
-  function mk(parent, geo, mat, px,py,pz) {
-    const m = new THREE.Mesh(geo, mat);
-    if(px!==undefined) m.position.set(px,py,pz);
-    parent.add(m); return m;
-  }
-
-  function buildDemoObject(type) {
-    if(demoGroup) dScene.remove(demoGroup);
-    demoGroup=null; wheelMeshes=[]; robotParts={}; currentGeo=type; wireOn=false;
-    const hint = document.getElementById('drive-hint');
-    if(hint) hint.style.opacity=(type==='car'||type==='robot')?'0.85':'0';
-    if(type==='car')   { demoGroup=buildCar();   }
-    else if(type==='robot'){ demoGroup=buildRobot(); }
-    else {
-      let geo;
-      if(type==='torusKnot')   geo=new THREE.TorusKnotGeometry(.9,.27,100,14);
-      if(type==='icosahedron') geo=new THREE.IcosahedronGeometry(1.2,1);
-      if(type==='octahedron')  geo=new THREE.OctahedronGeometry(1.3,2);
-      dMesh=new THREE.Mesh(geo, new THREE.MeshPhongMaterial({color:0xf72585,emissive:0x2d0015,specular:0x06ffa5,shininess:130}));
-      dWire=new THREE.Mesh(geo.clone(), new THREE.MeshBasicMaterial({color:0x06ffa5,wireframe:true,transparent:true,opacity:0.07}));
-      demoGroup=new THREE.Group(); demoGroup.add(dMesh); demoGroup.add(dWire);
-    }
-    dScene.add(demoGroup);
-  }
-
-  function buildCar() {
-    const g=new THREE.Group();
-    const mBody=new THREE.MeshPhongMaterial({color:0xf72585,emissive:0x1a000e,specular:0xff85c1,shininess:180});
-    const mDark=new THREE.MeshPhongMaterial({color:0x0d0d0d,shininess:60});
-    const mGlass=new THREE.MeshPhongMaterial({color:0x06ffa5,transparent:true,opacity:.45,shininess:200});
-    const mGold=new THREE.MeshPhongMaterial({color:0xffd60a,shininess:200});
-    const mGlow=new THREE.MeshBasicMaterial({color:0xffd60a});
-    const mBrake=new THREE.MeshBasicMaterial({color:0xff4361});
-    /* Main body */
-    mk(g,new THREE.BoxGeometry(2.5,.46,1.08),mBody,  0,.23, 0);
-    /* Cabin */
-    mk(g,new THREE.BoxGeometry(1.35,.4,1.0), mBody, -.1,.64, 0);
-    /* Windshields */
-    mk(g,new THREE.BoxGeometry(.04,.38,.86), mGlass,  .57,.62,0);
-    mk(g,new THREE.BoxGeometry(.04,.38,.86), mGlass, -.77,.62,0);
-    /* Spoiler */
-    mk(g,new THREE.BoxGeometry(.08,.22,1.0), mDark, -1.26,.5, 0);
-    mk(g,new THREE.BoxGeometry(.72,.04,1.0), mDark, -1.0, .6, 0);
-    /* Bumpers */
-    mk(g,new THREE.BoxGeometry(.06,.18,1.0), mDark,  1.24,.16,0);
-    mk(g,new THREE.BoxGeometry(.06,.18,1.0), mDark, -1.24,.16,0);
-    /* Headlights */
-    [ [1.26,.26, .28],[1.26,.26,-.28]].forEach(p=>mk(g,new THREE.BoxGeometry(.05,.1,.2),mGlow,...p));
-    /* Taillights */
-    [[-1.26,.26, .28],[-1.26,.26,-.28]].forEach(p=>mk(g,new THREE.BoxGeometry(.05,.1,.2),mBrake,...p));
-    /* Wheels + hubs */
-    [[.76,0,.64],[-.76,0,.64],[.76,0,-.64],[-.76,0,-.64]].forEach(p=>{
-      const wm=new THREE.Mesh(new THREE.CylinderGeometry(.27,.27,.19,20),mDark);
-      wm.position.set(...p); wm.rotation.z=Math.PI/2; g.add(wm);
-      mk(g,new THREE.CylinderGeometry(.11,.11,.21,8),mGold,...p).rotation.z=Math.PI/2;
-      wheelMeshes.push(wm);
-    });
-    g.position.y=0.32; return g;
-  }
-
-  function buildRobot() {
-    const g=new THREE.Group();
-    const mN=new THREE.MeshPhongMaterial({color:0x06ffa5,emissive:0x003322,specular:0xffffff,shininess:150});
-    const mD=new THREE.MeshPhongMaterial({color:0x0a2218,shininess:50});
-    const mG=new THREE.MeshPhongMaterial({color:0xffd60a,shininess:200,specular:0xffffff});
-    const mE=new THREE.MeshBasicMaterial({color:0xffd60a});
-    const mC=new THREE.MeshBasicMaterial({color:0xf72585});
-    /* Torso */
-    mk(g,new THREE.BoxGeometry(.72,.88,.44),mN, 0,.44,0);
-    mk(g,new THREE.BoxGeometry(.38,.32,.04),mD, 0,.44,.23); /* chest panel */
-    mk(g,new THREE.SphereGeometry(.065,8,8),mC, 0,.51,.24); /* core */
-    mk(g,new THREE.BoxGeometry(.72,.1,.44), mD, 0, 0,  0);  /* belt */
-    /* Neck + head */
-    mk(g,new THREE.CylinderGeometry(.09,.09,.14,8),mG, 0,.93,0);
-    const head=mk(g,new THREE.BoxGeometry(.55,.46,.46),mN, 0,1.17,0);
-    robotParts.head=head;
-    /* Ear sensors */
-    [-.29,.29].forEach(x=>mk(g,new THREE.CylinderGeometry(.04,.04,.07,6),mG,x,1.2,0));
-    /* Eyes */
-    [[-.13,1.18,.24],[.13,1.18,.24]].forEach(p=>mk(g,new THREE.BoxGeometry(.1,.065,.03),mE,...p));
-    mk(g,new THREE.BoxGeometry(.2,.03,.03),mE, 0,1.07,.24); /* mouth */
-    /* Arms (pivot at shoulder) */
-    const lArm=new THREE.Group(); lArm.position.set(-.46,.78,0);
-    mk(lArm,new THREE.BoxGeometry(.21,.62,.21),mN, 0,-.31,0);
-    mk(lArm,new THREE.SphereGeometry(.13,8,8),mD, 0,-.66,0);
-    mk(lArm,new THREE.SphereGeometry(.1,8,8), mG, 0,  .04,0);
-    g.add(lArm); robotParts.lArm=lArm;
-    const rArm=new THREE.Group(); rArm.position.set(.46,.78,0);
-    mk(rArm,new THREE.BoxGeometry(.21,.62,.21),mN, 0,-.31,0);
-    mk(rArm,new THREE.SphereGeometry(.13,8,8),mD, 0,-.66,0);
-    mk(rArm,new THREE.SphereGeometry(.1,8,8), mG, 0,  .04,0);
-    g.add(rArm); robotParts.rArm=rArm;
-    /* Hips */
-    mk(g,new THREE.BoxGeometry(.66,.16,.4),mD, 0,-.08,0);
-    /* Legs (pivot at hip) */
-    const lLeg=new THREE.Group(); lLeg.position.set(-.21,-.08,0);
-    mk(lLeg,new THREE.BoxGeometry(.24,.7,.24), mN, 0,-.35,0);
-    mk(lLeg,new THREE.BoxGeometry(.24,.1,.36), mD, 0,-.74,.06);
-    mk(lLeg,new THREE.SphereGeometry(.1,8,8),  mG, 0, .02,0);
-    g.add(lLeg); robotParts.lLeg=lLeg;
-    const rLeg=new THREE.Group(); rLeg.position.set(.21,-.08,0);
-    mk(rLeg,new THREE.BoxGeometry(.24,.7,.24), mN, 0,-.35,0);
-    mk(rLeg,new THREE.BoxGeometry(.24,.1,.36), mD, 0,-.74,.06);
-    mk(rLeg,new THREE.SphereGeometry(.1,8,8),  mG, 0, .02,0);
-    g.add(rLeg); robotParts.rLeg=rLeg;
-    g.position.y=0.88; return g;
-  }
-
-  function setGeo(t,btn){
-    document.querySelectorAll('.d-btn:not(#wire-btn)').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('wire-btn').classList.remove('active');
-    buildDemoObject(t);
-  }
-  function toggleWire(btn){
-    wireOn=!wireOn;
-    if(dWire) dWire.material.opacity=wireOn?.42:.07;
-    btn.classList.toggle('active',wireOn);
-  }
-
-  /* ═══════════════ CHART.JS — pop-in on scroll ══════════════ */
-  Chart.defaults.color='#a07090'; Chart.defaults.borderColor='rgba(247,37,133,.06)';
-  ScrollTrigger.create({ trigger:'#charts', start:'top 72%', once:true,
-    onEnter() {
-      new Chart(document.getElementById('radar-chart'),{type:'radar',data:{
-        labels:['Performance','Ease of Use','Community','Docs','Ecosystem','Features'],
-        datasets:[
-          {label:'GSAP',     data:[98,88,95,93,90,97],borderColor:'#f72585',backgroundColor:'rgba(247,37,133,.1)',borderWidth:2,pointBackgroundColor:'#f72585'},
-          {label:'Three.js', data:[95,72,98,84,86,99],borderColor:'#06ffa5',backgroundColor:'rgba(6,255,165,.1)',borderWidth:2,pointBackgroundColor:'#06ffa5'},
-          {label:'Chart.js', data:[91,96,91,97,88,87],borderColor:'#ffd60a',backgroundColor:'rgba(255,214,10,.1)',borderWidth:2,pointBackgroundColor:'#ffd60a'},
-        ]},options:{responsive:true,
-        animation:{ duration:1100, easing:'easeOutQuart' },
-        scales:{r:{grid:{color:'rgba(247,37,133,.07)'},angleLines:{color:'rgba(247,37,133,.07)'},pointLabels:{color:'#a07090',font:{size:11}},ticks:{display:false},suggestedMin:0,suggestedMax:100}},
-        plugins:{legend:{labels:{color:'#a07090',usePointStyle:true}}}}
-      });
-      new Chart(document.getElementById('bar-chart'),{type:'bar',data:{
-        labels:['Three.js','GSAP','Swiper','Chart.js','AOS','Typed.js','Particles','V-Tilt'],
-        datasets:[{label:'KB',data:[588,68,142,76,14,11,26,10],
-          backgroundColor:['rgba(247,37,133,.75)','rgba(6,255,165,.75)','rgba(255,214,10,.75)','rgba(255,109,0,.75)','rgba(255,67,97,.75)','rgba(255,133,193,.75)','rgba(247,37,133,.5)','rgba(6,255,165,.5)'],
-          borderColor:['#f72585','#06ffa5','#ffd60a','#ff6d00','#ff4361','#ff85c1','#f72585','#06ffa5'],
-          borderWidth:1,borderRadius:7}]},
-        options:{responsive:true,plugins:{legend:{display:false}},
-        animation:{ duration:900, easing:'easeOutQuart',
-          delay(ctx){ return ctx.dataIndex * 90; } },
-        scales:{y:{grid:{color:'rgba(247,37,133,.04)'},ticks:{color:'#a07090'}},x:{grid:{display:false},ticks:{color:'#a07090',font:{size:10}}}}}
-      });
-    }
-  });
-
-  /* ═══════════════ GSAP SCROLL ANIMATIONS ═══════════════════ */
-  ScrollTrigger.create({ start:'top -60',
-    onUpdate: s => { document.getElementById('nav').style.background = s.progress>0 ? 'rgba(7,4,10,.97)' : 'rgba(7,4,10,.82)'; }
-  });
-
-  gsap.from('.wf-step',{
-    scrollTrigger:{ trigger:'.wf-steps', start:'top 74%' },
-    opacity:0, y:40, stagger:.1, duration:.75, ease:'power2.out'
-  });
-
-  /* Stat counters */
-  document.querySelectorAll('[data-target]').forEach(el => {
-    const target=+el.dataset.target;
-    ScrollTrigger.create({ trigger:el, start:'top 84%', once:true,
-      onEnter(){ let v=0; const step=target/(1600/16);
-        const id=setInterval(()=>{ v=Math.min(v+step,target); el.textContent=Math.floor(v); if(v>=target) clearInterval(id); },16); }
-    });
-  });
-
-  /* ═══════════════ LOTTIE.JS (bodymovin) ════════════════════ */
-  /* CSS animations are visible immediately as fallback.
-     If a Lottie CDN animation resolves, it fades in on top. */
-  const lottieUrls = [
-    'https://lottie.host/4db68bbd-31f6-4cd8-84eb-189de081159a/fe5z3NKvDe.json',
-    'https://lottie.host/17b1a8a5-bde0-46c0-a2b5-5d4a4b71f4f2/1n2R7dplq8.json',
-    'https://lottie.host/cb5e4fc3-9fbd-432a-b52e-2df18ba742e7/VrHMaU82BX.json',
-  ];
-  ['la1','la2','la3'].forEach((id, i) => {
-    const target = document.getElementById('lt' + (i+1));
-    const anim = lottie.loadAnimation({
-      container: target,
-      renderer: 'svg',
-      loop: true,
-      autoplay: true,
-      path: lottieUrls[i]
-    });
-    anim.addEventListener('DOMLoaded', () => {
-      target.style.opacity = '1';
-      const fb = document.querySelector('#' + id + ' .la-fallback');
-      if(fb) fb.style.opacity = '0';
-    });
-  });
+    }, '-=0.15');
+  }());
   </script>
+
 </body>
 </html>
